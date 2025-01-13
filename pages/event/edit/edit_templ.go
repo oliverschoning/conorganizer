@@ -16,7 +16,7 @@ import (
 )
 
 func getEventID(path string) (int64, error) {
-	id := strconv.ParseInt(path, 10, 64)
+	id, err := strconv.ParseInt(path, 10, 64)
 	if err != nil {
 		return 0, err
 	}
