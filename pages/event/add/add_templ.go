@@ -47,7 +47,7 @@ func Page() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h1>Add New Event</h1><form method=\"post\" action=\"/event/add/new/\"><div><label for=\"title\">Title:</label> <input type=\"text\" id=\"title\" name=\"title\"></div><div><label for=\"description\">Description:</label> <textarea id=\"description\" name=\"description\"></textarea></div><div><button type=\"submit\">Add Event</button></div></form></body></html>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h1>Add New Event</h1><form method=\"post\" action=\"/event/add/new/\"><div><label for=\"title\">Title:</label> <input type=\"text\" id=\"title\" name=\"title\"></div><div><label for=\"description\">Description:</label> <textarea id=\"description\" name=\"description\"></textarea></div><div><button type=\"submit\">Add Event</button></div><hr><p>Test input for datastar</p><input data-bind=\"input\"><div data-text=\"$input\">I will get replaced with the contents of the input signal</div></form></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
