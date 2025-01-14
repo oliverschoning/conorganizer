@@ -7,7 +7,7 @@ import (
 	"github.com/Jeffail/gabs/v2"
 	"github.com/go-chi/chi/v5"
 	"github.com/gorilla/sessions"
-	"github.com/delaneyj/datastar"
+	datastar "github.com/starfederation/datastar/sdk/go"
 )
 
 type TemplCounterStore struct {
