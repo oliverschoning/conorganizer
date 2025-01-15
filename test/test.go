@@ -15,6 +15,44 @@ type TemplCounterStore struct {
 	User   uint32 `json:"user"`
 }
 
+templ templCounterExampleButtons() {
+	<div>
+		<button
+			data-on-click="$$post('/examples/templ_counter/increment/global')"
+		>
+			Increment Global
+		</button>
+		<button
+			data-on-click="$$post('/examples/templ_counter/increment/user')"
+		>
+			Increment User
+		</button>
+	</div>
+}
+
+templ templCounterExampleCounts() {
+	<div>
+		<div>
+			<div>Global</div>
+			<div data-text="$global"></div>
+		</div>
+		<div>
+			<div>User</div>
+			<div data-text="$user"></div>
+		</div>
+	</div>
+}
+
+templ templCounterExampleInitialContents(store TemplCounterStore) {
+	<div
+		id="container"
+		data-store={ templ.JSONString(store) }
+	>
+		@templCounterExampleButtons()
+		@templCounterExampleCounts()
+	</div>
+}
+
 func setupExamplesTemplCounter(examplesRouter chi.Router, sessionStore sessions.Store) error {
 	var globalCounter atomic.Uint32
 	const (
