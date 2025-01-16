@@ -2,7 +2,7 @@ module github.com/Regncon/conorganizer
 
 go 1.23.3
 
-require github.com/a-h/templ v0.2.793
+require github.com/a-h/templ v0.3.819
 
 require (
 	github.com/Jeffail/gabs/v2 v2.7.0
