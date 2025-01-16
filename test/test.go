@@ -10,6 +10,13 @@ import (
 	datastar "github.com/starfederation/datastar/sdk/go"
 )
 
+func test(w http.ResponseWriter, r *http.Request) {
+	sse := datastar.NewSSE(w, r)
+	sse.MergeFragments(
+		`<div id="question">What do you put in a toaster?</div>`,
+	)
+	sse.MergeSignals(`{response: '', answer: 'bread'}`)
+}
 func setupExamplesTemplCounter(examplesRouter chi.Router, sessionStore sessions.Store) error {
 	var globalCounter atomic.Uint32
 	const (
