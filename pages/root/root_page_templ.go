@@ -94,7 +94,7 @@ func Page(db *sql.DB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div style=\" display: grid;\r\n\t\t\t\t\tgrid-template-columns: repeat(auto-fit,minmax(350px, 350px));\r\n\t\t\t\t\tgap: 1rem;\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div style=\" display: grid;\n\t\t\t\t\tgrid-template-columns: repeat(auto-fit,minmax(350px, 350px));\n\t\t\t\t\tgap: 1rem;\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
