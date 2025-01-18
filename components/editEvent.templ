@@ -3,6 +3,7 @@ package components
 import (
 	"fmt"
 	"github.com/Regncon/conorganizer/models"
+	"github.com/Regncon/conorganizer/utils"
 )
 
 templ EditEvent(event models.EditEvent) {
@@ -26,7 +27,7 @@ templ EditEvent(event models.EditEvent) {
 			<legend>Short Description</legend>
 			<input id="short_description" data-bind-short_description value="$short_description"/>
 		</fieldset>
-		<button data-on-click={ "@put('/edit/update')" }>Save</button>
+		<button data-on-click={ fmt.Sprintf("@put('/edit/%s')", utils.NumberToString(event.ID)) }>Save</button>
 		<button data-on-click={ "@get('/event')" }>Cancel</button>
 		<style type="text/css">
 			legend {

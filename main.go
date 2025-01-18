@@ -47,6 +47,7 @@ func main() {
 		})
 
 		r.Get("/{id}", routes.EditEventRoute())
+		r.Put("/{id}", routes.UpdateEventRoute(db))
 	})
 
 	fileServer := http.FileServer(http.Dir("./static"))
