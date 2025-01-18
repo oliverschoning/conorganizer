@@ -42,7 +42,7 @@ func EventRoute() http.HandlerFunc {
 	}
 }
 
-func EditEventRoute(db *sql.DB) http.HandlerFunc {
+func EditEventRoute() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var signals models.EditEvent
 		err := datastar.ReadSignals(r, &signals)
