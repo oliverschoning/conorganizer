@@ -9,7 +9,6 @@ templ templCounterExampleButtons() {
 	<div>
 		<button
 			data-on-click="@post('/templ_counter/increment/global')"
-			data-indicator="fetching"
 		>
 			Increment Global
 		</button>
@@ -21,30 +20,29 @@ templ templCounterExampleButtons() {
 	</div>
 }
 
-templ templCounterExampleCounts() {
-	<div>
+templ templCounterExampleCounts(global string, user string) {
+	<div id="counts">
 		<div>
 			<div>Global</div>
-			<div data-text="$global"></div>
+			<span>{ global } </span>
 		</div>
 		<div>
 			<div>User</div>
-			<div data-text="$user"></div>
+			<span>{ user } </span>
 		</div>
 	</div>
 }
 
-templ templCounterExampleInitialContents(store TemplCounterStore) {
+templ templContents(global string, user string) {
 	<div
 		id="container"
-		data-store={ templ.JSONString(store) }
 	>
 		@templCounterExampleButtons()
-		@templCounterExampleCounts()
+		@templCounterExampleCounts(global, user)
 	</div>
 }
 
-templ templCounterExampleInitialContents2(store TemplCounterStore) {
+templ templCounterExampleInitialContents(global string, user string) {
 	<html>
 		<head>
 			<script type="module" src="/static/datastar/datastar.js"></script>
@@ -52,30 +50,57 @@ templ templCounterExampleInitialContents2(store TemplCounterStore) {
 		<body>
 			<div
 				id="container"
-				data-signals={ templ.JSONString(store) }
+				data-on-load="@get('/templ_counter/data')"
 			>
 				@templCounterExampleButtons()
-				@templCounterExampleCounts()
-				<div data-signals="{input: 1123123, form: {input: 2}, input2: 123}"></div>
-				<input data-bind-input/>
-				<div data-text="$input">
-					I will get replaced with the contents of the input signal
-				</div>
-				<button data-on-click="$input = ''">Reset</button>
-				<hr/>
-				// 	<div data-computed-repeated="$input2.repeat(2)">
-				// 		<input data-bind-input2/>
-				// 		<div data-text="$repeated">
-				// 			Will be replaced with the contents of the repeated signal
-				// 		</div>
-				// 	</div>
-				// 	<hr/>
-				<div id="question"></div>
-				<button data-on-click="@get('/test')">Fetch a question</button>
-				<div data-text="$answer">
-					Will be replaced with the contents of the repeated signal
+				<div id="counts">
+					test
 				</div>
 			</div>
+			<div
+				data-signals="{
+    foo: 1234,
+    bar: 'bar'
+}"
+			>
+				<div data-computed-baz="$foo * 2"></div>
+				<input type="number" step="1" min="0" data-bind-foo/>
+				<input type="text" data-bind-baz/>
+				<input type="text" data-bind-bar/>
+			</div>
+			<code>
+				<pre data-text="ctx.signals.JSON()"></pre>
+			</code>
 		</body>
 	</html>
 }
+
+// templ templCounterExampleInitialContents2(store TemplCounterStore) {
+// 	<html>
+// 		<head>
+// 			<script type="module" src="/static/datastar/datastar.js"></script>
+// 		</head>
+// 		<body>
+// 			<div
+// 				id="container"
+// 				data-signals={ templ.JSONString(store) }
+// 				data-on-load="@get('/templ_counter/data')"
+// 			>
+// 				@templCounterExampleButtons()
+// 				@templCounterExampleCounts()
+// 				// <div data-signals="{input: 1123123, form: {input: 2}, input2: 123}"></div>
+// 				// <input data-bind-input/>
+// 				// <div data-text="$input">
+// 				// 	I will get replaced with the contents of the input signal
+// 				// </div>
+// 				// <button data-on-click="$input = ''">Reset</button>
+// 				// <hr/>
+// 				// <div id="question"></div>
+// 				// <button data-on-click="@get('/test')">Fetch a question</button>
+// 				// <div data-text="$answer">
+// 				// 	Will be replaced with the contents of the repeated signal
+// 				// </div>
+// 			</div>
+// 		</body>
+// 	</html>
+// }

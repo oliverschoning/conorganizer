@@ -1,70 +1,65 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"time"
 
-	site "github.com/Regncon/conorganizer/test"
+	"github.com/Regncon/conorganizer/models"
+	"github.com/Regncon/conorganizer/routes"
+	"github.com/Regncon/conorganizer/service"
+	"github.com/a-h/templ"
 	"github.com/go-chi/chi/v5"
-	"github.com/gorilla/sessions"
-	// "github.com/Regncon/conorganizer/pages/event/add"
-	// "github.com/Regncon/conorganizer/pages/event/edit"
-	// "github.com/Regncon/conorganizer/pages/root"
-	// "github.com/Regncon/conorganizer/service"
-	// "github.com/a-h/templ"
+	datastar "github.com/starfederation/datastar/sdk/go"
 )
 
 func main() {
-	// log.Println("Starting Regncon 2025")
-	// db, err := service.InitDB("events.db")
-	// if err != nil {
-	// 	log.Fatalf("Could not initialize DB: %v", err)
-	// }
-	// defer db.Close()
-
-	// http.Handle("/", templ.Handler(root.Page(db)))
-	// http.Handle("/event/add/", templ.Handler(add.Page()))
-	// http.HandleFunc("/event/", func(w http.ResponseWriter, r *http.Request) {
-	// 	// Extract the event ID from the URL
-	// 	path := strings.TrimPrefix(r.URL.Path, "/event/")
-	// 	if path == "" || strings.Contains(path, "/") {
-	// 		http.NotFound(w, r)
-	// 		return
-	// 	}
-
-	// 	log.Printf("Event handler for ID: %s", path)
-	// 	// Call the event page handler with the extracted ID
-	// 	templ.Handler(edit.Page(path, db)).Component.Render(r.Context(), w)
-	// })
-
-	// http.HandleFunc("/event/edit/save/", edit.Save(db))
-
-	// http.HandleFunc("/event/add/new/", func(w http.ResponseWriter, r *http.Request) {
-	// 	templ.Handler(add.EventNew(w, r, db)).Component.Render(r.Context(), w)
-	// })
-
-	// fs := http.FileServer(http.Dir("static"))
-	// http.Handle("/static/", http.StripPrefix("/static/", fs))
-
-	// Handle POST and GET requests.
-
-	sessionStore := sessions.NewCookieStore([]byte("your-secret-key"))
-
-	r := chi.NewRouter()
-	r.Use(loggingMiddleware)
-	r.Use(recoveryMiddleware)
-
-	err := site.SetupExamplesTemplCounter(r, sessionStore)
+	log.Println("Starting Regncon 2025")
+	db, err := service.InitDB("events.db")
 	if err != nil {
-		log.Fatalf("Failed to set up templ counter: %v", err)
+		log.Fatalf("Could not initialize DB: %v", err)
 	}
+	defer db.Close()
 
-	fs := http.FileServer(http.Dir("static"))
-	r.Handle("/static/*", http.StripPrefix("/static/", fs))
+	router := chi.NewRouter()
+	router.Use(loggingMiddleware)
+	router.Use(recoveryMiddleware)
 
-	log.Println("Listening on :3000")
-	if err := http.ListenAndServe(":3000", r); err != nil {
+	router.Get("/", routes.RootRoute(db))
+	router.Get("/event", routes.EventRoute())
+
+	router.Route("/edit", func(r chi.Router) {
+		r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+			var signals models.EditEvent
+			err := datastar.ReadSignals(r, &signals)
+
+			if err != nil {
+				http.Error(w, fmt.Sprintf("Error reading signals: %v", err), http.StatusBadRequest)
+				return
+			}
+
+			fmt.Printf("%+v signals\n", signals)
+			eventSignal, err := templ.JSONString(signals)
+			fmt.Println("===============", eventSignal)
+			sse := datastar.NewSSE(w, r)
+			if err := sse.MergeSignals([]byte(fmt.Sprintf("%v", signals))); err != nil {
+				http.Error(w, fmt.Sprintf("Error reading signals: %v", err), http.StatusBadRequest)
+			}
+			if err != nil {
+				http.Error(w, fmt.Sprintf("Error converting JSON: %v", err), http.StatusBadRequest)
+			}
+
+		})
+
+		r.Get("/update", routes.EditEventRoute(db))
+	})
+
+	fileServer := http.FileServer(http.Dir("./static"))
+	router.Mount("/static", http.StripPrefix("/static/", fileServer))
+
+	log.Printf("Listening on :3000")
+	if err := http.ListenAndServe(":3000", router); err != nil {
 		log.Printf("error listening: %v", err)
 	}
 }

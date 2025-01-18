@@ -1,0 +1,11 @@
+package components
+
+css editButton() {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+templ EditButton(id string) {
+	<button data-on-click={ "@get('/edit/update')" } class={ editButton() }>edit</button>
+}

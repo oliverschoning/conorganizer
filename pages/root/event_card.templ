@@ -2,30 +2,38 @@ package root
 
 import (
 	"fmt"
-	"strconv"
+	"github.com/Regncon/conorganizer/components"
+	"github.com/Regncon/conorganizer/models"
+	"github.com/Regncon/conorganizer/utils"
 )
 
-templ eventCard(ID int64, title string, game_master string, system string, short_description string) {
-	<a
-		href={ templ.URL(fmt.Sprintf("/event/%s", strconv.FormatInt(ID, 10))) }
-		style="text-decoration: none; color: #eceff4;"
+templ EventCard(event models.Event, system string, game_master string) {
+	<div
+		id={ fmt.Sprintf("editId%d", event.ID) }
+		style="position: relative;"
+		data-signals={ fmt.Sprintf("{ id: %d, title: '%s', game_master: 'System', system: 'Game Master', short_description: '%s', editing: false }", event.ID, event.Name, event.Description) }
 	>
-		<div
-			style="
+		<a
+			id={ fmt.Sprintf("editId%d", event.ID) }
+			href={ templ.URL(fmt.Sprintf("/event/%s", event.ID)) }
+			style="text-decoration: none; color: #eceff4;"
+		>
+			<div
+				style="
 	    width: 350px;
 	    border-radius: 15px;
 	    overflow: hidden;
 	    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 	    background-color: #3b4252;
 	    color: #eceff4;"
-		>
-			<div style="position: relative;">
-				<img
-					src="/static/images/events/dice-small.webp"
-					style="width: 100%; display: block;"
-				/>
-				<div
-					style="
+			>
+				<div style="position: relative;">
+					<img
+						src="/static/images/events/dice-small.webp"
+						style="width: 100%; display: block;"
+					/>
+					<div
+						style="
 			    position: absolute;
 			    top: 0;
 			    left: 0;
@@ -39,15 +47,17 @@ templ eventCard(ID int64, title string, game_master string, system string, short
 			    text-align: center;
 			    padding: 10px;
 			    box-sizing: border-box;"
-				>
-					<h1>{ title }</h1>
+					>
+						<h1>{ event.Name }</h1>
+					</div>
+				</div>
+				<div style="padding: 15px;">
+					<h2 style="margin: 0; font-size: 18px; color: #d08770;">{ game_master }</h2>
+					<p style="font-size: 14px; color: #88c0d0; margin: 5px 0 10px;">{ system }</p>
+					<p style="font-size: 14px; color: #eceff4;">{ event.Description }</p>
 				</div>
 			</div>
-			<div style="padding: 15px;">
-				<h2 style="margin: 0; font-size: 18px; color: #d08770;">{ game_master }</h2>
-				<p style="font-size: 14px; color: #88c0d0; margin: 5px 0 10px;">{ system }</p>
-				<p style="font-size: 14px; color: #eceff4;">{ short_description }</p>
-			</div>
-		</div>
-	</a>
+		</a>
+		@components.EditButton(utils.NumberToString(event.ID))
+	</div>
 }

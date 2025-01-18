@@ -94,12 +94,12 @@ func Page(db *sql.DB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div style=\" display: grid;\n\t\t\t\t\tgrid-template-columns: repeat(auto-fit,minmax(350px, 350px));\n\t\t\t\t\tgap: 1rem;\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div style=\" display: grid;\n\t\t\t\t\tgrid-template-columns: repeat(auto-fit,minmax(350px, 350px));\n\t\t\t\t\tgap: 1rem;\" data-on-load=\"@get(&#39;/edit&#39;)\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		for _, event := range events {
-			templ_7745c5c3_Err = eventCard(event.ID, event.Name, "System", "Game Master", event.Description).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = EventCard(event, "System", "Game Master").Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

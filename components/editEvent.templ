@@ -1,0 +1,43 @@
+package components
+
+import (
+	"fmt"
+	"github.com/Regncon/conorganizer/models"
+)
+
+templ EditEvent(event models.EditEvent) {
+	<div
+		id={ fmt.Sprintf("editId%d", event.ID) }
+		data-signals={ templ.JSONString(event) }
+	>
+		<fieldset>
+			<legend>Title</legend>
+			<input id="title" data-bind-title value="$title"/>
+		</fieldset>
+		<fieldset>
+			<legend>Game Master</legend>
+			<input id="game_master" data-bind-game_master value="$game_master"/>
+		</fieldset>
+		<fieldset>
+			<legend>System</legend>
+			<input id="system" data-bind-system value="$system"/>
+		</fieldset>
+		<fieldset>
+			<legend>Short Description</legend>
+			<input id="short_description" data-bind-short_description value="$short_description"/>
+		</fieldset>
+		<button data-on-click={ "@put('/edit/update')" }>Save</button>
+		<button data-on-click={ "@get('/event')" }>Cancel</button>
+		<style type="text/css">
+			legend {
+				background-color: #fff;
+				color: #000;
+				padding: 3px 6px;
+			}
+
+			input {
+				margin: 0.4rem;
+			}
+		</style>
+	</div>
+}

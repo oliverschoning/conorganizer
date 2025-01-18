@@ -3,6 +3,7 @@ package site
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"sync/atomic"
 
 	"github.com/Jeffail/gabs/v2"
@@ -51,7 +52,9 @@ func SetupExamplesTemplCounter(examplesRouter chi.Router, sessionStore sessions.
 		}
 
 		sse := datastar.NewSSE(w, r)
-		sse.MergeFragmentTempl(templCounterExampleInitialContents(store))
+		if err := sse.MergeFragmentTempl(templCounterExampleInitialContents(strconv.FormatUint(uint64(store.Global), 10), strconv.FormatUint(uint64(store.User), 10))); err != nil {
+			http.Error(w, fmt.Sprintf("Error reading signals: %v", err), http.StatusBadRequest)
+		}
 	})
 
 	updateGlobal := func(store *gabs.Container) {
@@ -59,10 +62,17 @@ func SetupExamplesTemplCounter(examplesRouter chi.Router, sessionStore sessions.
 	}
 
 	examplesRouter.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		templ.Handler(templCounterExampleInitialContents2(TemplCounterStore{
-			Global: 0,
-			User:   0,
-		})).Component.Render(r.Context(), w)
+
+		userVal, _, err := userVal(r)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+
+		store := TemplCounterStore{
+			Global: globalCounter.Load(),
+			User:   userVal,
+		}
+		templ.Handler(templCounterExampleInitialContents(strconv.FormatUint(uint64(store.Global), 10), strconv.FormatUint(uint64(store.User), 10))).Component.Render(r.Context(), w)
 
 		examplesRouter.Get("/test", func(w http.ResponseWriter, r *http.Request) {
 			sse := datastar.NewSSE(w, r)
@@ -75,19 +85,33 @@ func SetupExamplesTemplCounter(examplesRouter chi.Router, sessionStore sessions.
 
 	examplesRouter.Route("/templ_counter/increment", func(incrementRouter chi.Router) {
 		incrementRouter.Post("/global", func(w http.ResponseWriter, r *http.Request) {
+
+			userVal, _, err := userVal(r)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+
+			store := TemplCounterStore{
+				Global: globalCounter.Load(),
+				User:   userVal,
+			}
+
 			update := gabs.New()
 			updateGlobal(update)
 
-			fmt.Println(update.String())
-			var signals TemplCounterStore
-			err := datastar.ReadSignals(r, &signals)
-			if err != nil {
-				http.Error(w, fmt.Sprintf("Error reading signals: %v", err), http.StatusBadRequest)
-				return
-			}
-			fmt.Printf("%+v signals\n", signals)
+			// fmt.Println(update.String())
+			// var signals TemplCounterStore
+			// err := datastar.ReadSignals(r, &signals)
+			// if err != nil {
+			// 	http.Error(w, fmt.Sprintf("Error reading signals: %v", err), http.StatusBadRequest)
+			// 	return
+			// }
+			// fmt.Printf("%+v signals\n", signals)
 			sse := datastar.NewSSE(w, r)
-			sse.MergeSignals(update.Bytes())
+			if err := sse.MergeFragmentTempl(templCounterExampleCounts(strconv.FormatUint(uint64(store.Global), 10), strconv.FormatUint(uint64(store.User), 10))); err != nil {
+				http.Error(w, fmt.Sprintf("Error reading signals: %v", err), http.StatusBadRequest)
+			}
+			// sse.MergeSignals(update.Bytes())
 		})
 
 		incrementRouter.Post("/user", func(w http.ResponseWriter, r *http.Request) {
@@ -102,12 +126,20 @@ func SetupExamplesTemplCounter(examplesRouter chi.Router, sessionStore sessions.
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
 
+			store := TemplCounterStore{
+				Global: globalCounter.Load(),
+				User:   val,
+			}
+
 			update := gabs.New()
 			updateGlobal(update)
 			update.Set(val, "user")
 
 			sse := datastar.NewSSE(w, r)
-			sse.MergeSignals(update.Bytes())
+			// sse.MergeSignals(update.Bytes())
+			if err := sse.MergeFragmentTempl(templCounterExampleCounts(strconv.FormatUint(uint64(store.Global), 10), strconv.FormatUint(uint64(store.User), 10))); err != nil {
+				http.Error(w, fmt.Sprintf("Error reading signals: %v", err), http.StatusBadRequest)
+			}
 		})
 	})
 
