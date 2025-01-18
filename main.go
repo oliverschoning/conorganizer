@@ -9,7 +9,6 @@ import (
 	"github.com/Regncon/conorganizer/models"
 	"github.com/Regncon/conorganizer/routes"
 	"github.com/Regncon/conorganizer/service"
-	"github.com/a-h/templ"
 	"github.com/go-chi/chi/v5"
 	datastar "github.com/starfederation/datastar/sdk/go"
 )
@@ -40,14 +39,9 @@ func main() {
 			}
 
 			fmt.Printf("%+v signals\n", signals)
-			eventSignal, err := templ.JSONString(signals)
-			fmt.Println("===============", eventSignal)
 			sse := datastar.NewSSE(w, r)
 			if err := sse.MergeSignals([]byte(fmt.Sprintf("%v", signals))); err != nil {
 				http.Error(w, fmt.Sprintf("Error reading signals: %v", err), http.StatusBadRequest)
-			}
-			if err != nil {
-				http.Error(w, fmt.Sprintf("Error converting JSON: %v", err), http.StatusBadRequest)
 			}
 
 		})
