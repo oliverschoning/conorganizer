@@ -239,6 +239,22 @@ func SetupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 				})
 
 				todoRouter.Route("/edit", func(editRouter chi.Router) {
+					// editRouter.Get("/", func(w http.ResponseWriter, r *http.Request) {
+					// 	sessionID, mvc, err := mvcSession(w, r)
+					// 	if err != nil {
+					// 		http.Error(w, err.Error(), http.StatusInternalServerError)
+					// 		return
+					// 	}
+
+					// 	i, err := routeIndex(w, r)
+					// 	if err != nil {
+					// 		return
+					// 	}
+
+					// 	mvc.EditingIdx = i
+					// 	saveMVC(r.Context(), sessionID, mvc)
+					// })
+
 					editRouter.Get("/", func(w http.ResponseWriter, r *http.Request) {
 						sessionID, mvc, err := mvcSession(w, r)
 						if err != nil {

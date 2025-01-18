@@ -7,38 +7,89 @@ import (
 )
 
 templ EditEvent(event models.EditEvent) {
+	<style type="text/css">
+			legend {
+				background-color: #4b4b4b;
+				padding: 3px 6px;
+				border-radius: 1rem;
+			}
+
+			input {
+				margin: 0.4rem;
+			}
+			.button {
+				display: inline-block;
+				padding: 12px 28px;
+				margin: 10px;
+				font-size: 24px;
+				font-weight: bold;
+				text-transform: uppercase;
+				color: #fff;
+				background-image: linear-gradient(to bottom right, #00c6ff, #0072ff);
+				border: none;
+				border-radius: 40px;
+				box-shadow: 0px 4px 0px #0072ff;
+				transition: all 0.2s ease-in-out;
+				cursor: pointer;
+				}
+
+				.button:hover {
+				transform: translateY(-2px);
+				box-shadow: 0px 6px 0px #0072ff;
+				}
+
+				.button:active {
+				transform: translateY(0px);
+				box-shadow: none;
+				background-image: linear-gradient(to bottom right, #0072ff, #00c6ff);
+				}
+
+				.button:before,
+				.button:after {
+				content: "";
+				position: absolute;
+				width: 0;
+				height: 0;
+				}
+
+				.button:before {
+				top: -3px;
+				left: -3px;
+				border-radius: 40px;
+				border-top: 3px solid #fff;
+				border-left: 3px solid #fff;
+				}
+
+				.button:after {
+				bottom: -3px;
+				right: -3px;
+				border-radius: 40px;
+				border-bottom: 3px solid #fff;
+				border-right: 3px solid #fff;
+			}
+
+		</style>
 	<div
 		id={ fmt.Sprintf("editId%d", event.ID) }
 		data-signals={ templ.JSONString(event) }
 	>
 		<fieldset>
 			<legend>Title</legend>
-			<input id="title" data-bind-title value="$title"/>
+			<input value={ event.Title }/>
 		</fieldset>
 		<fieldset>
 			<legend>Game Master</legend>
-			<input id="game_master" data-bind-game_master value="$game_master"/>
+			<input value={ event.GameMaster }/>
 		</fieldset>
 		<fieldset>
 			<legend>System</legend>
-			<input id="system" data-bind-system value="$system"/>
+			<input value={ event.System }/>
 		</fieldset>
 		<fieldset>
 			<legend>Short Description</legend>
-			<input id="short_description" data-bind-short_description value="$short_description"/>
+			<input value={ event.ShortDescription }/>
 		</fieldset>
-		<button data-on-click={ fmt.Sprintf("@put('/edit/%s')", utils.NumberToString(event.ID)) }>Save</button>
-		<button data-on-click={ "@get('/event')" }>Cancel</button>
-		<style type="text/css">
-			legend {
-				background-color: #fff;
-				color: #000;
-				padding: 3px 6px;
-			}
-
-			input {
-				margin: 0.4rem;
-			}
-		</style>
+		<button class="button" data-on-click={ fmt.Sprintf("@put('/asd%s')", utils.NumberToString(event.ID)) }>Save</button>
+		<button class="button" data-on-click={ "@put('/api/todos/cancel')" }>Cancel</button>
 	</div>
 }

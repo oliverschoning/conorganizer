@@ -9,3 +9,9 @@ templ Icon(icon string, attrs ...string) {
 templ SseIndicator(signalName string) {
 	<div class="loading-dots text-primary" data-class={ fmt.Sprintf("{'loading ml-4': $%s}", signalName) }></div>
 }
+
+templ SpinnerIcon(signalName string) {
+	<div data-class-loading={ fmt.Sprintf("$%s", signalName) } data-class={ fmt.Sprintf("{'indicator':$%s}", signalName) }>
+		@Icon("svg-spinners:wind-toy", "style", "font-size: 20rem")
+	</div>
+}

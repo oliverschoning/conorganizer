@@ -5,3 +5,13 @@ body {
 	background-color: #2e3440;
 	color: #eceff4;
 }
+
+.indicator {
+	opacity: 0;
+	transition: opacity 300ms ease-out;
+}
+
+.indicator.loading {
+	opacity: 1;
+	transition: opacity 300ms ease-in;
+}
