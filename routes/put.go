@@ -26,7 +26,7 @@ func UpdateEventRoute(db *sql.DB) http.HandlerFunc {
 		// }
 		// return events, nil
 
-		var signals models.EditEvent
+		var signals models.Event
 		err := datastar.ReadSignals(r, &signals)
 		if err != nil {
 			// http.Error(w, fmt.Sprintf("Error reading signals: %v", err), http.StatusBadRequest)
@@ -34,14 +34,8 @@ func UpdateEventRoute(db *sql.DB) http.HandlerFunc {
 
 		}
 
-		var event = models.Event{
-			ID:          signals.ID,
-			Name:        signals.Title,
-			Description: signals.ShortDescription,
-		}
-
-		query := "UPDATE events SET name = ?, description = ? WHERE id = ?"
-		res, err := db.Exec(query, event.Name, event.Description, event.ID)
+		query := "UPDATE events SET title = ?, short_description = ?, game_master = ?, system = ? WHERE id = ?"
+		res, err := db.Exec(query, signals.Title, signals.ShortDescription, signals.GameMaster, signals.System, signals.ID)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Error updating event: %v", err), http.StatusBadRequest)
 			return
@@ -61,7 +55,7 @@ func UpdateEventRoute(db *sql.DB) http.HandlerFunc {
 
 		fmt.Printf("%+v signals\n", signals)
 		sse := datastar.NewSSE(w, r)
-		if err := sse.MergeFragmentTempl(root.EventCard(event, signals.System, signals.GameMaster)); err != nil {
+		if err := sse.MergeFragmentTempl(root.EventCard(signals)); err != nil {
 			http.Error(w, fmt.Sprintf("Error reading signals: %v", err), http.StatusBadRequest)
 		}
 

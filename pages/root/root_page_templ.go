@@ -12,12 +12,14 @@ import (
 	"database/sql"
 	"github.com/Regncon/conorganizer/components"
 	"github.com/Regncon/conorganizer/models"
+	"log/slog"
 )
 
-func GetEvents(db *sql.DB) ([]models.Event, error) {
-	query := "SELECT id, name, description FROM events"
+func GetEvents(db *sql.DB, logger *slog.Logger) ([]models.Event, error) {
+	query := "SELECT id, title, short_description, game_master, system FROM events"
 	rows, err := db.Query(query)
 	if err != nil {
+		logger.Error("Error fetching events", "err", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -25,7 +27,8 @@ func GetEvents(db *sql.DB) ([]models.Event, error) {
 	var events []models.Event
 	for rows.Next() {
 		var event models.Event
-		if err := rows.Scan(&event.ID, &event.Name, &event.Description); err != nil {
+		if err := rows.Scan(&event.ID, &event.Title, &event.ShortDescription, &event.GameMaster, &event.System); err != nil {
+			logger.Error("Error fetching events", "err", err)
 			return nil, err
 		}
 		events = append(events, event)
@@ -33,7 +36,7 @@ func GetEvents(db *sql.DB) ([]models.Event, error) {
 	return events, nil
 }
 
-func Page(db *sql.DB) templ.Component {
+func Page(db *sql.DB, logger *slog.Logger) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -54,7 +57,7 @@ func Page(db *sql.DB) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		events, err := GetEvents(db)
+		events, err := GetEvents(db, logger)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -83,7 +86,7 @@ func Page(db *sql.DB) templ.Component {
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(err.Error())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_page.templ`, Line: 36, Col: 43}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_page.templ`, Line: 39, Col: 43}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
@@ -99,7 +102,7 @@ func Page(db *sql.DB) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		for _, event := range events {
-			templ_7745c5c3_Err = EventCard(event, "System", "Game Master").Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = EventCard(event).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

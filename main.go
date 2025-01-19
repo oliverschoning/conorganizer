@@ -10,7 +10,6 @@ import (
 	"syscall"
 
 	"database/sql"
-	"io/ioutil"
 
 	"github.com/Regncon/conorganizer/service"
 	"github.com/go-chi/chi/v5"
@@ -19,11 +18,13 @@ import (
 )
 
 func main() {
+	// add filepath to logg for debugging
+	// logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{AddSource: true}))
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
 	db, err := service.InitDB("events.db")
 	if err != nil {
-		logger.Error("Could not initialize DB: %v", err)
+		logger.Error("Could not initialize DB", "err", err)
 	}
 	defer db.Close()
 
@@ -34,7 +35,7 @@ func main() {
 		return "3000"
 	}
 
-	logger.Info(fmt.Sprintf("Starting Server 0.0.0.0:" + getPort()))
+	logger.Info(fmt.Sprintf("Starting Server 0.0.0.0:%s", getPort()))
 	defer logger.Info("Stopping Server")
 
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
@@ -131,7 +132,7 @@ func initializeDatabase(db *sql.DB, filename string) error {
 }
 
 func loadSQLFile(filename string) (string, error) {
-	data, err := ioutil.ReadFile(filename)
+	data, err := os.ReadFile(filename)
 	if err != nil {
 		return "", fmt.Errorf("failed to read file %s: %w", filename, err)
 	}

@@ -8,9 +8,12 @@ package index
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/Regncon/conorganizer/layouts"
+import (
+	"fmt"
+	"github.com/Regncon/conorganizer/layouts"
+)
 
-func Index(title string) templ.Component {
+func Index(title string, initialApiOnLoad string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -43,7 +46,20 @@ func Index(title string) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col w-full min-h-screen bg-base-200\"><nav class=\"flex justify-center\"><ul class=\"menu menu-vertical md:menu-horizontal bg-base-200 rounded-box\"><li class=\"hover:text-primary\"><a href=\"/counter\">Counter Example</a></li><li class=\"hover:text-primary\"><a href=\"/monitor\">System Monitoring Example</a></li><li class=\"hover:text-primary\"><a href=\"/sortable\">Sortable Example</a></li></ul></nav><div id=\"events-container\" data-on-load=\"@get(&#39;/api/todos&#39;)\"><p>Todos Example</p><p>If you are seeing this message, please clear your cookies and refresh the page.</p></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col w-full min-h-screen bg-base-200\"><nav class=\"flex justify-center\"><ul class=\"menu menu-vertical md:menu-horizontal bg-base-200 rounded-box\"><li class=\"hover:text-primary\"><a href=\"/counter\">Counter Example</a></li><li class=\"hover:text-primary\"><a href=\"/monitor\">System Monitoring Example</a></li><li class=\"hover:text-primary\"><a href=\"/sortable\">Sortable Example</a></li></ul></nav><div id=\"events-container\" data-on-load=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var3 string
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("@get('%s')", initialApiOnLoad))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/index.templ`, Line: 18, Col: 88}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"><p>Todos Example</p><p>If you are seeing this message, please clear your cookies and refresh the page.</p></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

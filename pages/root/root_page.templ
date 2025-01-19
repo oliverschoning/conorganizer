@@ -4,12 +4,14 @@ import (
 	"database/sql"
 	"github.com/Regncon/conorganizer/components"
 	"github.com/Regncon/conorganizer/models"
+	"log/slog"
 )
 
-func GetEvents(db *sql.DB) ([]models.Event, error) {
-	query := "SELECT id, name, description FROM events"
+func GetEvents(db *sql.DB, logger *slog.Logger) ([]models.Event, error) {
+	query := "SELECT id, title, short_description, game_master, system FROM events"
 	rows, err := db.Query(query)
 	if err != nil {
+		logger.Error("Error fetching events", "err", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -17,7 +19,8 @@ func GetEvents(db *sql.DB) ([]models.Event, error) {
 	var events []models.Event
 	for rows.Next() {
 		var event models.Event
-		if err := rows.Scan(&event.ID, &event.Name, &event.Description); err != nil {
+		if err := rows.Scan(&event.ID, &event.Title, &event.ShortDescription, &event.GameMaster, &event.System); err != nil {
+			logger.Error("Error fetching events", "err", err)
 			return nil, err
 		}
 		events = append(events, event)
@@ -25,8 +28,8 @@ func GetEvents(db *sql.DB) ([]models.Event, error) {
 	return events, nil
 }
 
-templ Page(db *sql.DB) {
-	{{ events, err := GetEvents(db) }}
+templ Page(db *sql.DB, logger *slog.Logger) {
+	{{ events, err := GetEvents(db, logger) }}
 	<html>
 		@components.Header("Regncon Programm 2025")
 		<body>
@@ -43,7 +46,7 @@ templ Page(db *sql.DB) {
 				data-on-load="@get('/edit')"
 			>
 				for _, event := range events {
-					@EventCard(event, "System", "Game Master")
+					@EventCard(event)
 				}
 			</div>
 		</body>

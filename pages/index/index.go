@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"time"
@@ -18,30 +19,34 @@ import (
 	datastar "github.com/starfederation/datastar/sdk/go"
 )
 
-func SetupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.Server, db *sql.DB) error {
+func SetupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.Server, db *sql.DB, logger *slog.Logger) error {
 	nc, err := ns.Client()
 	if err != nil {
 		return fmt.Errorf("error creating nats client: %w", err)
 	}
+	logger.Info("NATS client created successfully")
 
 	js, err := jetstream.New(nc)
 	if err != nil {
 		return fmt.Errorf("error creating jetstream client: %w", err)
 	}
+	logger.Info("JetStream client created successfully")
 
 	kv, err := js.CreateOrUpdateKeyValue(context.Background(), jetstream.KeyValueConfig{
 		Bucket:      "regncon",
-		Description: "regcon 2025",
+		Description: "regncon 2025",
 		Compression: true,
 		TTL:         time.Hour,
 		MaxBytes:    16 * 1024 * 1024,
 	})
 
 	if err != nil {
+		logger.Error("Error creating key value", "err", err)
 		return fmt.Errorf("error creating key value: %w", err)
 	}
+	logger.Info("Key value store created successfully")
 
-	saveMVC := func(ctx context.Context, sessionID string, mvc *EventMVC) error {
+	saveMVC := func(ctx context.Context, sessionID string, mvc *TodoMVC) error {
 		b, err := json.Marshal(mvc)
 		if err != nil {
 			return fmt.Errorf("failed to marshal mvc: %w", err)
@@ -52,7 +57,7 @@ func SetupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 		return nil
 	}
 
-	resetMVC := func(mvc *EventMVC) {
+	resetMVC := func(mvc *TodoMVC) {
 		mvc.Mode = TodoViewModeAll
 		mvc.Todos = []*Event{
 			{Text: "Learn a backend language", Completed: true},
@@ -64,14 +69,14 @@ func SetupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 		mvc.EditingIdx = -1
 	}
 
-	mvcSession := func(w http.ResponseWriter, r *http.Request) (string, *EventMVC, error) {
+	mvcSession := func(w http.ResponseWriter, r *http.Request) (string, *TodoMVC, error) {
 		ctx := r.Context()
 		sessionID, err := upsertSessionID(store, r, w)
 		if err != nil {
 			return "", nil, fmt.Errorf("failed to get session id: %w", err)
 		}
 
-		mvc := &EventMVC{}
+		mvc := &TodoMVC{}
 		if entry, err := kv.Get(ctx, sessionID); err != nil {
 			if err != jetstream.ErrKeyNotFound {
 				return "", nil, fmt.Errorf("failed to get key value: %w", err)
@@ -90,7 +95,7 @@ func SetupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 	}
 
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		Index("Regncon programm 2025").Render(r.Context(), w)
+		Index("Regncon program 2025", "/api/todos").Render(r.Context(), w)
 	})
 
 	router.Route("/api", func(apiRouter chi.Router) {
@@ -102,6 +107,7 @@ func SetupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return
 				}
+				logger.Info("Session ID and MVC retrieved successfully", "sessionID", sessionID)
 
 				sse := datastar.NewSSE(w, r)
 
@@ -113,21 +119,31 @@ func SetupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 					return
 				}
 				defer watcher.Stop()
+				logger.Info("Watcher created successfully")
 
 				for {
 					select {
 					case <-ctx.Done():
+						logger.Info("Context done")
 						return
 					case entry := <-watcher.Updates():
 						if entry == nil {
 							continue
 						}
 						if err := json.Unmarshal(entry.Value(), mvc); err != nil {
+							logger.Error("Error unmarshalling entry", "err", err)
 							http.Error(w, err.Error(), http.StatusInternalServerError)
 							return
 						}
-						c := EventMVCView(mvc, db)
+						c := TodoMVCView(mvc, db, logger)
+						viewJSON, err := MustJSONMarshal(c)
+						if err != nil {
+							logger.Error("Error marshalling EventMVCView", "err", err)
+						} else {
+							logger.Info("EventMVCView updated", "view", viewJSON)
+						}
 						if err := sse.MergeFragmentTempl(c); err != nil {
+							logger.Error("Error merging fragment template", "err", err)
 							sse.ConsoleError(err)
 							return
 						}
@@ -340,12 +356,12 @@ func SetupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 	return nil
 }
 
-func MustJSONMarshal(v any) string {
+func MustJSONMarshal(v any) (string, error) {
 	b, err := json.MarshalIndent(v, "", " ")
 	if err != nil {
-		panic(err)
+		return "", err
 	}
-	return string(b)
+	return string(b), nil
 }
 
 func upsertSessionID(store sessions.Store, r *http.Request, w http.ResponseWriter) (string, error) {

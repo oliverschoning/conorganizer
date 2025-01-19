@@ -3,6 +3,7 @@ package routes
 import (
 	"database/sql"
 	"fmt"
+	"log/slog"
 	"net/http"
 
 	"github.com/Regncon/conorganizer/components"
@@ -12,30 +13,25 @@ import (
 	datastar "github.com/starfederation/datastar/sdk/go"
 )
 
-func RootRoute(db *sql.DB) http.HandlerFunc {
+func RootRoute(db *sql.DB, logger *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		templ.Handler(root.Page(db)).Component.Render(r.Context(), w)
+		templ.Handler(root.Page(db, logger)).Component.Render(r.Context(), w)
 	}
 
 }
 
 func EventRoute() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var signals models.EditEvent
+		var signals models.Event
 		err := datastar.ReadSignals(r, &signals)
 		if err != nil {
 			// http.Error(w, fmt.Sprintf("Error reading signals: %v", err), http.StatusBadRequest)
 			fmt.Printf("Accessed trough browser not signal %v", err)
 
 		}
-		event := models.Event{
-			ID:          signals.ID,
-			Name:        signals.Title,
-			Description: signals.ShortDescription,
-		}
 		fmt.Printf("%+v signals\n", signals)
 		sse := datastar.NewSSE(w, r)
-		if err := sse.MergeFragmentTempl(root.EventCard(event, signals.System, signals.GameMaster)); err != nil {
+		if err := sse.MergeFragmentTempl(root.EventCard(signals)); err != nil {
 			http.Error(w, fmt.Sprintf("Error reading signals: %v", err), http.StatusBadRequest)
 		}
 
@@ -44,7 +40,7 @@ func EventRoute() http.HandlerFunc {
 
 func EditEventRoute() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var signals models.EditEvent
+		var signals models.Event
 		err := datastar.ReadSignals(r, &signals)
 		if err != nil {
 			// http.Error(w, fmt.Sprintf("Error reading signals: %v", err), http.StatusBadRequest)

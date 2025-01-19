@@ -5,6 +5,7 @@ import (
 	"github.com/Regncon/conorganizer/components"
 	"github.com/Regncon/conorganizer/models"
 	"github.com/Regncon/conorganizer/pages/root"
+	"log/slog"
 	"strconv"
 )
 
@@ -24,14 +25,14 @@ type Event struct {
 	Completed bool   `json:"completed"`
 }
 
-type EventMVC struct {
+type TodoMVC struct {
 	Todos      []*Event      `json:"todos"`
 	EditingIdx int           `json:"editingIdx"`
 	Mode       EventViewMode `json:"mode"`
 }
 
-templ EventMVCView(mvc *EventMVC, db *sql.DB) {
-	{{ events, err := root.GetEvents(db) }}
+templ TodoMVCView(mvc *TodoMVC, db *sql.DB, logger *slog.Logger) {
+	{{ events, err := root.GetEvents(db, logger) }}
 	<div id="events-container">
 		if err != nil {
 			<p>Error fetching events: { err.Error() }</p>
@@ -247,17 +248,17 @@ templ EventMVCView(mvc *EventMVC, db *sql.DB) {
 // }
 templ EditRow(event models.Event, editingIdx int) {
 	{{
-		eventEdit := models.EditEvent{
+		eventEdit := models.Event{
 			ID:               event.ID,
-			Title:            event.Name,
-			GameMaster:       "System",
-			System:           "Game Master",
-			ShortDescription: event.Description,
+			Title:            event.Title,
+			GameMaster:       event.GameMaster,
+			System:           event.System,
+			ShortDescription: event.ShortDescription,
 		}
 	}}
 	if editingIdx == int(event.ID) {
 		@components.EditEvent(eventEdit)
 	} else {
-		@root.EventCard(event, "System", "Game Master")
+		@root.EventCard(event)
 	}
 }

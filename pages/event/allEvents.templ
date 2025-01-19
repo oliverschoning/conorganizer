@@ -1,0 +1,46 @@
+package event
+
+import (
+	"database/sql"
+	"fmt"
+	"github.com/Regncon/conorganizer/components"
+	"github.com/Regncon/conorganizer/models"
+	"github.com/Regncon/conorganizer/pages/root"
+	"log/slog"
+)
+
+type EventMVC struct {
+	Events     []*models.Event `json:"event"`
+	EditingIdx int             `json:"editingIdx"`
+}
+
+templ AllEventMVCView(mvc *EventMVC, db *sql.DB, logger *slog.Logger) {
+	{{ events, err := root.GetEvents(db, logger) }}
+	<div id="events-container">
+		if err != nil {
+			<p>Error fetching events: { err.Error() }</p>
+			return
+		}
+		<div
+			style=" display: grid;
+					grid-template-columns: repeat(auto-fit,minmax(350px, 350px));
+					gap: 1rem;"
+		>
+			for _, event := range events {
+				@EditRow(event, mvc.EditingIdx)
+			}
+		</div>
+		<code>
+			<pre data-text="ctx.signals.JSON()"></pre>
+		</code>
+	</div>
+}
+
+templ EditRow(event models.Event, editingIdx int) {
+	{{ fmt.Println("EditRow", editingIdx, event.ID) }}
+	if editingIdx == int(event.ID) {
+		@components.EditEvent(event)
+	} else {
+		@root.EventCard(event)
+	}
+}
