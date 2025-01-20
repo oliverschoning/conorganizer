@@ -102,7 +102,7 @@ func Page(db *sql.DB, logger *slog.Logger) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		for _, event := range events {
-			templ_7745c5c3_Err = EventCard(event).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = EventCard(event, int(event.ID)).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

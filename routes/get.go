@@ -31,7 +31,7 @@ func EventRoute() http.HandlerFunc {
 		}
 		fmt.Printf("%+v signals\n", signals)
 		sse := datastar.NewSSE(w, r)
-		if err := sse.MergeFragmentTempl(root.EventCard(signals)); err != nil {
+		if err := sse.MergeFragmentTempl(root.EventCard(signals, int(signals.ID))); err != nil {
 			http.Error(w, fmt.Sprintf("Error reading signals: %v", err), http.StatusBadRequest)
 		}
 

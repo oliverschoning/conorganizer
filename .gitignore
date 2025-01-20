@@ -11,3 +11,6 @@ tmp/
 
 # Ignore jetbrains IDE files
 .idea/
+
+pages/_index2/
+pages/_event/

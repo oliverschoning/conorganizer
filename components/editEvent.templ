@@ -90,6 +90,6 @@ templ EditEvent(event models.Event) {
 			<input value={ event.ShortDescription }/>
 		</fieldset>
 		<button class="button" data-on-click={ fmt.Sprintf("@put('/asd%s')", utils.NumberToString(event.ID)) }>Save</button>
-		<button class="button" data-on-click={ "@put('/api/todos/cancel')" }>Cancel</button>
+		<button class="button" data-on-click={ "@put('/event/cancel')" }>Cancel</button>
 	</div>
 }

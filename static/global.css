@@ -1,3 +1,7 @@
+:root {
+	--events-grid: repeat(auto-fit, minmax(350px, 350px));
+}
+
 body {
 	font-family: Arial, sans-serif;
 	margin: 0;
@@ -14,4 +18,10 @@ body {
 .indicator.loading {
 	opacity: 1;
 	transition: opacity 300ms ease-in;
+}
+
+.events-grid {
+	display: grid;
+	grid-template-columns: var(--events-grid);
+	gap: 1rem;
 }

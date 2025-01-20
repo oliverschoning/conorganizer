@@ -46,7 +46,7 @@ templ Page(db *sql.DB, logger *slog.Logger) {
 				data-on-load="@get('/edit')"
 			>
 				for _, event := range events {
-					@EventCard(event)
+					@EventCard(event, int(event.ID))
 				}
 			</div>
 		</body>
