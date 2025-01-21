@@ -43,11 +43,11 @@ templ ShowEvents(mvc *EventMVC, events []models.Event, db *sql.DB, logger *slog.
 			<p>Error fetching events: { err.Error() }</p>
 			return
 		}
-		@SingleEvent(event, mvc)
+		@EventCard(event, mvc)
 	}
 }
 
-templ SingleEvent(event models.Event, mvc *EventMVC) {
+templ EventCard(event models.Event, mvc *EventMVC) {
 	<style>
 		.events-grid {
 			--events-grid: 1fr;
