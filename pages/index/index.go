@@ -7,9 +7,11 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"slices"
 	"strconv"
 	"time"
 
+	"github.com/Regncon/conorganizer/models"
 	"github.com/Regncon/conorganizer/pages/root"
 	"github.com/delaneyj/toolbelt"
 	"github.com/delaneyj/toolbelt/embeddednats"
@@ -191,6 +193,47 @@ func SetupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 			}
 
 		})
+		eventRouter.Put("/{id}/save", func(w http.ResponseWriter, r *http.Request) {
+			idString := chi.URLParam(r, "id")
+			id, err := strconv.Atoi(idString)
+			if err != nil {
+				logger.Error("Id not found", "err", err, "id", idString)
+				http.Error(w, "ID must be numeric", http.StatusBadRequest)
+				return
+			}
+
+			var updatedEvent models.Event
+			updatedEvent.ID = int64(id)
+			err = datastar.ReadSignals(r, &updatedEvent)
+			if err != nil {
+				logger.Error("Error reading signals", "err", err)
+				fmt.Printf("Accessed trough browser not signal %v", err)
+			}
+
+			sessionID, mvc, err := mvcSession(w, r)
+			sse := datastar.NewSSE(w, r)
+			if err != nil {
+				sse.ConsoleError(err)
+				return
+			}
+			eventIndex := slices.IndexFunc(mvc.Events, func(c models.Event) bool { return c.ID == updatedEvent.ID })
+			fmt.Printf("idx: %d,Event to update: %+v\n,", eventIndex, mvc.Events[eventIndex])
+
+			err = updateDb(db, logger, updatedEvent, w, r)
+			if err != nil {
+				logger.Error("Error updating event", "err", err)
+				sse.ConsoleError(err)
+				return
+			}
+			mvc.Events[eventIndex] = updatedEvent
+			mvc.IsEditing = false
+
+			if err := saveMVC(r.Context(), sessionID, mvc); err != nil {
+				sse.ConsoleError(err)
+				return
+			}
+
+		})
 		eventRouter.Put("/cancel", func(w http.ResponseWriter, r *http.Request) {
 
 			sessionID, mvc, err := mvcSession(w, r)
@@ -244,4 +287,29 @@ func upsertSessionID(store sessions.Store, r *http.Request, w http.ResponseWrite
 		}
 	}
 	return id, nil
+}
+
+func updateDb(db *sql.DB, logger *slog.Logger, updatedEvent models.Event, w http.ResponseWriter, r *http.Request) error {
+	query := "UPDATE events SET title = ?, short_description = ?, game_master = ?, system = ? WHERE id = ?"
+	res, err := db.Exec(query, updatedEvent.Title, updatedEvent.ShortDescription, updatedEvent.GameMaster, updatedEvent.System, updatedEvent.ID)
+	if err != nil {
+		logger.Error("Error updating event", "err", err)
+		http.Error(w, fmt.Sprintf("Error updating event: %v", err), http.StatusBadRequest)
+		return err
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		logger.Error("Error getting rows affected", "err", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return err
+	}
+
+	if rowsAffected == 0 {
+		logger.Error("Event not found or no changes made")
+		http.Error(w, "Event not found or no changes made", http.StatusNotFound)
+		return err
+	}
+	fmt.Printf("Event updated successfully: %v\n", updatedEvent)
+	return nil
 }

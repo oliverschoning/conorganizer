@@ -179,7 +179,10 @@ templ EventCard(event models.Event, mvc *EventMVC) {
 		@components.EditButton(event.ID)
 	</div>
 	<!-- Card -->
-	<label class="card">
+	<label
+		class="card"
+		data-signals={ fmt.Sprintf("{title: '%s', game_master: '%s', system: '%s', short_description: '%s'}", event.Title, event.GameMaster, event.System, event.ShortDescription) }
+	>
 		<div class="card-header">
 			<img
 				src="/static/images/events/dice-small.webp"
@@ -188,6 +191,7 @@ templ EventCard(event models.Event, mvc *EventMVC) {
 			/>
 			if (mvc.IsEditing) {
 				<input
+					data-bind-title
 					type="text"
 					class="card-title"
 					placeholder="Enter a title"
@@ -203,6 +207,7 @@ templ EventCard(event models.Event, mvc *EventMVC) {
 					<span class="field-label">Game Master</span>
 					if (mvc.IsEditing) {
 						<input
+							data-bind="game_master"
 							type="text"
 							class="field-value"
 							placeholder="Enter a game master"
@@ -216,6 +221,7 @@ templ EventCard(event models.Event, mvc *EventMVC) {
 					<span class="field-label">System</span>
 					if (mvc.IsEditing) {
 						<input
+							data-bind-system
 							type="text"
 							class="field-value"
 							placeholder="Enter a system"
@@ -230,6 +236,7 @@ templ EventCard(event models.Event, mvc *EventMVC) {
 				<span class="field-label">Description</span>
 				if (mvc.IsEditing) {
 					<textarea
+						data-bind="short_description"
 						class="field-value"
 						rows="4"
 						cols="50"

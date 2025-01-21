@@ -72,7 +72,7 @@ templ EditEvent(event models.Event) {
 	<div
 		id={ fmt.Sprintf("editId%d", event.ID) }
 	>
-		<button class="button" data-on-click={ fmt.Sprintf("@put('/asd%s')", utils.NumberToString(event.ID)) }>Save</button>
+		<button class="button" data-on-click={ fmt.Sprintf("@put('/event/%s/save')", utils.NumberToString(event.ID)) }>Save</button>
 		<button class="button" data-on-click={ "@put('/event/cancel')" }>Cancel</button>
 	</div>
 }
