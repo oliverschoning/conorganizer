@@ -63,7 +63,7 @@ func SetupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 
 		mvc.Events = events
 
-		mvc.EditingIdx = -1
+		mvc.Idx = -1
 	}
 
 	mvcSession := func(w http.ResponseWriter, r *http.Request) (string, *EventMVC, error) {
@@ -95,8 +95,8 @@ func SetupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 		Index("Regncon program 2025", "/events").Render(r.Context(), w)
 	})
 
-	router.Route("/events", func(eventRouter chi.Router) {
-		eventRouter.Get("/", func(w http.ResponseWriter, r *http.Request) {
+	router.Route("/events", func(eventsRouter chi.Router) {
+		eventsRouter.Get("/", func(w http.ResponseWriter, r *http.Request) {
 			sessionID, mvc, err := mvcSession(w, r)
 			if err != nil {
 				logger.Error("failed getting mvc session", "err", err.Error())
@@ -143,44 +143,87 @@ func SetupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 		})
 
 	})
-	router.Get("/event/{id}", func(w http.ResponseWriter, r *http.Request) {
+	router.Route("/event", func(eventRouter chi.Router) {
+		eventRouter.Get("/{id}", func(w http.ResponseWriter, r *http.Request) {
 
-		idString := chi.URLParam(r, "id")
-		id, err := strconv.Atoi(idString)
-		if err != nil {
-			logger.Error("Id not found", "err", err, "id", idString)
-			http.Error(w, "ID must be numeric", http.StatusBadRequest)
-			return
-		}
-		sessionID, mvc, err := mvcSession(w, r)
-		sse := datastar.NewSSE(w, r)
-		if err != nil {
-			sse.ConsoleError(err)
-			return
-		}
+			idString := chi.URLParam(r, "id")
+			id, err := strconv.Atoi(idString)
+			if err != nil {
+				logger.Error("Id not found", "err", err, "id", idString)
+				http.Error(w, "ID must be numeric", http.StatusBadRequest)
+				return
+			}
+			sessionID, mvc, err := mvcSession(w, r)
+			sse := datastar.NewSSE(w, r)
+			if err != nil {
+				sse.ConsoleError(err)
+				return
+			}
 
-		mvc.EditingIdx = id
-		if err := saveMVC(r.Context(), sessionID, mvc); err != nil {
-			sse.ConsoleError(err)
-			return
-		}
+			mvc.Idx = id
+			if err := saveMVC(r.Context(), sessionID, mvc); err != nil {
+				sse.ConsoleError(err)
+				return
+			}
 
-	})
-	router.Put("/event/cancel", func(w http.ResponseWriter, r *http.Request) {
+		})
+		eventRouter.Put("/{id}/edit", func(w http.ResponseWriter, r *http.Request) {
+			idString := chi.URLParam(r, "id")
+			id, err := strconv.Atoi(idString)
+			if err != nil {
+				logger.Error("Id not found", "err", err, "id", idString)
+				http.Error(w, "ID must be numeric", http.StatusBadRequest)
+				return
+			}
 
-		sessionID, mvc, err := mvcSession(w, r)
-		sse := datastar.NewSSE(w, r)
-		if err != nil {
-			sse.ConsoleError(err)
-			return
-		}
+			sessionID, mvc, err := mvcSession(w, r)
+			sse := datastar.NewSSE(w, r)
+			if err != nil {
+				sse.ConsoleError(err)
+				return
+			}
 
-		mvc.EditingIdx = -1
-		if err := saveMVC(r.Context(), sessionID, mvc); err != nil {
-			sse.ConsoleError(err)
-			return
-		}
+			mvc.Idx = id
+			mvc.IsEditing = true
+			if err := saveMVC(r.Context(), sessionID, mvc); err != nil {
+				sse.ConsoleError(err)
+				return
+			}
 
+		})
+		eventRouter.Put("/cancel", func(w http.ResponseWriter, r *http.Request) {
+
+			sessionID, mvc, err := mvcSession(w, r)
+			sse := datastar.NewSSE(w, r)
+			if err != nil {
+				sse.ConsoleError(err)
+				return
+			}
+
+			mvc.IsEditing = false
+			if err := saveMVC(r.Context(), sessionID, mvc); err != nil {
+				sse.ConsoleError(err)
+				return
+			}
+
+		})
+		eventRouter.Put("/back", func(w http.ResponseWriter, r *http.Request) {
+
+			sessionID, mvc, err := mvcSession(w, r)
+			sse := datastar.NewSSE(w, r)
+			if err != nil {
+				sse.ConsoleError(err)
+				return
+			}
+
+			mvc.Idx = -1
+			mvc.IsEditing = false
+			if err := saveMVC(r.Context(), sessionID, mvc); err != nil {
+				sse.ConsoleError(err)
+				return
+			}
+
+		})
 	})
 
 	return nil

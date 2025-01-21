@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "fmt"
 
-func EditButton(id string) templ.Component {
+func EditButton(id int64) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -31,20 +31,20 @@ func EditButton(id string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<style>\n\n\t\t.button2 {\n\t\t\tposition: absolute;\n\t\t\ttop: 0;\n\t\t\tright: 0;\n\t\t\tdisplay: flex;\n\t\t\talign-items: center;\n\t\t\tjustify-content: flex-start;\n\t\t\twidth: 100px;\n\t\t\theight: 40px;\n\t\t\tborder: none;\n\t\t\tpadding: 0px 20px;\n\t\t\tbackground-color: rgb(168, 38, 255);\n\t\t\tcolor: white;\n\t\t\tfont-weight: 500;\n\t\t\tcursor: pointer;\n\t\t\tborder-radius: 10px;\n\t\t\tbox-shadow: 5px 5px 0px rgb(140, 32, 212);\n\t\t\ttransition-duration: .3s;\n\t\t}\n\n\t\t.svg {\n\t\t\twidth: 13px;\n\t\t\tposition: absolute;\n\t\t\tright: 0;\n\t\t\tmargin-right: 20px;\n\t\t\tfill: white;\n\t\t\ttransition-duration: .3s;\n\t\t}\n\n\t\t.button2:hover {\n\t\t\tcolor: transparent;\n\t\t    width: 3.5rem;\n\t\t}\n\n\t\t.button2:hover svg {\n\t\t\tright: 43%;\n\t\t\tmargin: 0;\n\t\t\tpadding: 0;\n\t\t\tborder: none;\n\t\t\ttransition-duration: .3s;\n\t\t}\n\n\t\t.button2:active {\n\t\t\ttransform: translate(3px , 3px);\n\t\t\ttransition-duration: .3s;\n\t\t\tbox-shadow: 2px 2px 0px rgb(140, 32, 212);\n\t\t}\n\t</style><button data-on-click=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<style>\n\n\t\t.button2 {\n\t\t\tposition: relative;\n\t\t\tdisplay: flex;\n\t\t\talign-items: center;\n\t\t\tjustify-content: flex-start;\n\t\t\twidth: 6.25rem;\n\t\t\theight: 3.25rem;\n\t\t\tborder: none;\n\t\t\tpadding: 0px 20px;\n\t\t\tbackground-color: rgb(168, 38, 255);\n\t\t\tcolor: white;\n\t\t\tfont-weight: 500;\n\t\t\tcursor: pointer;\n\t\t\tborder-radius: 10px;\n\t\t\tbox-shadow: 5px 5px 0px rgb(140, 32, 212);\n\t\t\ttransition-duration: .3s;\n\t\t}\n\n\t\t.svg {\n\t\t\twidth: 13px;\n\t\t\tposition: absolute;\n\t\t\tright: 0;\n\t\t\tmargin-right: 20px;\n\t\t\tfill: transparent;\n\t\t\ttransition-duration: .3s;\n\t\t}\n\n\t\t.button2:hover {\n\t\t\tcolor: transparent;\n\t\t}\n\n\t\t.button2:hover svg {\n\t\t\tright: 43%;\n\t\t\tmargin: 0;\n\t\t\tpadding: 0;\n\t\t\tborder: none;\n\t\t\ttransition-duration: .3s;\n\t\t}\n\n\t\t.button2:active {\n\t\t\ttransform: translate(3px , 3px);\n\t\t\ttransition-duration: .3s;\n\t\t\tbox-shadow: 2px 2px 0px rgb(140, 32, 212);\n\t\t}\n\t</style><button data-on-click=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("@get('/event/%s')", id))
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("@put('/event/%d/edit')", id))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/editButton.templ`, Line: 56, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/editButton.templ`, Line: 53, Col: 66}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" class=\"button2\">edit <svg class=\"svg\" viewBox=\"0 0 512 512\"><path d=\"M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z\"></path></svg></button>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" class=\"button2\">edit <svg class=\"svg\" viewBox=\"0 0 24 24\"><g fill=\"currentColor\" stroke=\"#000\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path stroke-dasharray=\"56\" stroke-dashoffset=\"56\" d=\"M3 21l2 -6l11 -11c1 -1 3 -1 4 0c1 1 1 3 0 4l-11 11l-6 2\"><animate fill=\"freeze\" attributeName=\"stroke-dashoffset\" dur=\"0.6s\" values=\"56;0\"></animate></path> <path stroke-dasharray=\"8\" stroke-dashoffset=\"8\" d=\"M15 5l4 4\"><animate fill=\"freeze\" attributeName=\"stroke-dashoffset\" begin=\"0.6s\" dur=\"0.2s\" values=\"8;0\"></animate></path> <path stroke-dasharray=\"6\" stroke-dashoffset=\"6\" stroke-width=\"1\" d=\"M6 15l3 3\"><animate fill=\"freeze\" attributeName=\"stroke-dashoffset\" begin=\"0.6s\" dur=\"0.2s\" values=\"6;0\"></animate></path></g></svg></button>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

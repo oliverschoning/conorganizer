@@ -39,7 +39,7 @@ func GetEvent(db *sql.DB, id int, logger *slog.Logger) (models.Event, error) {
 	return event, nil
 }
 
-templ EventMVCView(mvc *EventMVC, db *sql.DB, logger *slog.Logger) {
+templ EventMVCView(mvc *EventMVC2, db *sql.DB, logger *slog.Logger) {
 	{{ event, err := GetEvent(db, mvc.EditingIdx, logger) }}
 	<div id="events-container">
 		if err != nil {

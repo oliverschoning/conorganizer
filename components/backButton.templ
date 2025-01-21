@@ -25,14 +25,14 @@ templ BackButton() {
 		</symbol>
 	</svg>
 	<style>
-	.button {
+	.back-btn {
 		all: unset;
 	}
-	.svg-button {
+	.svg-back-btn {
 		margin-inline-end: 0.5rem;
 	}
 
-	.button {
+	.back-btn {
 		position: relative;
 		display: inline-flex;
 		height: 3.5rem;
@@ -50,34 +50,34 @@ templ BackButton() {
 		gap: 1rem;
 	}
 
-	.button-item {
+	.back-btn-item {
 		background-color: transparent;
 		color: #1d1d1f;
 	}
 
-	.button-item .button-bg {
+	.back-btn-item .back-btn-bg {
 		border-color: rgba(255, 208, 116);
 		background-color: rgba(255, 208, 116);
 	}
 
-	.button-inner,
-	.button-inner-hover,
-	.button-inner-static {
+	.back-btn-inner,
+	.back-btn-inner-hover,
+	.back-btn-inner-static {
 		pointer-events: none;
 		display: block;
 	}
 
-	.button-inner-hover,
-	.button-inner-static {
+	.back-btn-inner-hover,
+	.back-btn-inner-static {
 		display: flex;
 		place-items: space-between;
 	}
 
-	.button-inner {
+	.back-btn-inner {
 		position: relative;
 	}
 
-	.button-inner-hover {
+	.back-btn-inner-hover {
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -85,7 +85,7 @@ templ BackButton() {
 		transform: translateY(70%);
 	}
 
-	.button-bg {
+	.back-btn-bg {
 		overflow: hidden;
 		border-radius: 2rem;
 		position: absolute;
@@ -97,13 +97,13 @@ templ BackButton() {
 		transition: transform 1.8s cubic-bezier(0.19, 1, 0.22, 1);
 	}
 
-	.button-bg,
-	.button-bg-layer,
-	.button-bg-layers {
+	.back-btn-bg,
+	.back-btn-bg-layer,
+	.back-btn-bg-layers {
 		display: block;
 	}
 
-	.button-bg-layers {
+	.back-btn-bg-layers {
 		position: absolute;
 		left: 50%;
 		transform: translate(-50%);
@@ -112,7 +112,7 @@ templ BackButton() {
 		width: max(200%, 10rem);
 	}
 
-	.button-bg-layer {
+	.back-btn-bg-layer {
 		border-radius: 9999px;
 		position: absolute;
 		top: 0;
@@ -122,20 +122,20 @@ templ BackButton() {
 		transform: scale(0);
 	}
 
-	.button-bg-layer.-purple {
+	.back-btn-bg-layer.-purple {
 		background-color: rgba(163, 116, 255);
 	}
 
-	.button-bg-layer.-turquoise {
+	.back-btn-bg-layer.-turquoise {
 		background-color: rgba(23, 241, 209);
 	}
 
-	.button-bg-layer.-yellow {
+	.back-btn-bg-layer.-yellow {
 		--tw-bg-opacity: 1;
 		background-color: rgba(255, 208, 116, var(--tw-bg-opacity));
 	}
 
-	.button:hover .button-inner-static {
+	.back-btn:hover .back-btn-inner-static {
 		opacity: 0;
 		transform: translateY(-70%);
 		transition:
@@ -143,7 +143,7 @@ templ BackButton() {
 			opacity 0.3s linear;
 	}
 
-	.button:hover .button-inner-hover {
+	.back-btn:hover .back-btn-inner-hover {
 		opacity: 1;
 		transform: translateY(0);
 		transition:
@@ -151,44 +151,44 @@ templ BackButton() {
 			opacity 1.4s cubic-bezier(0.19, 1, 0.22, 1);
 	}
 
-	.button:hover .button-bg-layer {
+	.back-btn:hover .back-btn-bg-layer {
 		transition:
 			transform 1.3s cubic-bezier(0.19, 1, 0.22, 1),
 			opacity 0.3s linear;
 	}
 
-	.button:hover .button-bg-layer-1 {
+	.back-btn:hover .back-btn-bg-layer-1 {
 		transform: scale(1);
 	}
 
-	.button:hover .button-bg-layer-2 {
+	.back-btn:hover .back-btn-bg-layer-2 {
 		transition-delay: 0.1s;
 		transform: scale(1);
 	}
 
-	.button:hover .button-bg-layer-3 {
+	.back-btn:hover .back-btn-bg-layer-3 {
 		transition-delay: 0.2s;
 		transform: scale(1);
 	}
 
 	</style>
-	<button class="button button-item" data-on-click={ "@put('/event/cancel')" }>
-		<span class="button-bg">
-			<span class="button-bg-layers">
-				<span class="button-bg-layer button-bg-layer-1 -purple"></span>
-				<span class="button-bg-layer button-bg-layer-2 -turquoise"></span>
-				<span class="button-bg-layer button-bg-layer-3 -yellow"></span>
+	<button class="back-btn back-btn-item" data-on-click={ "@put('/event/back')" }>
+		<span class="back-btn-bg">
+			<span class="back-btn-bg-layers">
+				<span class="back-btn-bg-layer back-btn-bg-layer-1 -purple"></span>
+				<span class="back-btn-bg-layer back-btn-bg-layer-2 -turquoise"></span>
+				<span class="back-btn-bg-layer back-btn-bg-layer-3 -yellow"></span>
 			</span>
 		</span>
-		<span class="button-inner">
-			<span class="button-inner-static">
-				<svg width="30" height="30" version="1.1" class="svg-button">
+		<span class="back-btn-inner">
+			<span class="back-btn-inner-static">
+				<svg width="30" height="30" version="1.1" class="svg-back-btn">
 					<use href="#arrow-left"></use>
 				</svg>
 				back
 			</span>
-			<span class="button-inner-hover">
-				<svg width="30" height="30" version="1.1" class="svg-button">
+			<span class="back-btn-inner-hover">
+				<svg width="30" height="30" version="1.1" class="svg-back-btn">
 					<use href="#arrow-left"></use>
 				</svg>
 				back

@@ -10,8 +10,9 @@ import (
 )
 
 type EventMVC struct {
-	Events     []models.Event `json:"event"`
-	EditingIdx int            `json:"editingIdx"`
+	Events    []models.Event `json:"event"`
+	Idx       int            `json:"editingIdx"`
+	IsEditing bool           `json:"isEditing"`
 }
 
 templ AllEventMVCView(mvc *EventMVC, db *sql.DB, logger *slog.Logger) {
@@ -31,22 +32,22 @@ templ AllEventMVCView(mvc *EventMVC, db *sql.DB, logger *slog.Logger) {
 }
 
 templ ShowEvents(mvc *EventMVC, events []models.Event, db *sql.DB, logger *slog.Logger) {
-	{{ fmt.Println("EditingIdx: ", mvc.EditingIdx, mvc.EditingIdx == -1) }}
-	if (mvc.EditingIdx == -1) {
+	{{ fmt.Println("Id: ", mvc.Idx, mvc.Idx == -1) }}
+	if (mvc.Idx == -1) {
 		for _, event := range events {
-			@root.EventCard(event, mvc.EditingIdx)
+			@root.EventCard(event, mvc.Idx)
 		}
 	} else {
-		{{ event, err := GetEvent(db, mvc.EditingIdx, logger) }}
+		{{ event, err := GetEvent(db, mvc.Idx, logger) }}
 		if err != nil {
 			<p>Error fetching events: { err.Error() }</p>
 			return
 		}
-		@SingleEvent(event)
+		@SingleEvent(event, mvc)
 	}
 }
 
-templ SingleEvent(event models.Event) {
+templ SingleEvent(event models.Event, mvc *EventMVC) {
 	<style>
 		.events-grid {
 			--events-grid: 1fr;
@@ -65,7 +66,6 @@ templ SingleEvent(event models.Event) {
 			border-radius: 0.5rem;
 			box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 			width: 100%;
-			max-width: 48rem;
 			overflow: hidden;
 			cursor: pointer;
 		}
@@ -174,32 +174,74 @@ templ SingleEvent(event models.Event) {
 			}
 		}
 	</style>
+	<div style="display: flex; place-content: space-between; margin-inline: 1rem;">
+		@components.BackButton()
+		@components.EditButton(event.ID)
+	</div>
 	<!-- Card -->
 	<label class="card">
-		@components.BackButton()
 		<div class="card-header">
 			<img
 				src="/static/images/events/dice-small.webp"
 				alt="Colorful dice collection"
 				class="card-image"
 			/>
-			<h1 class="card-title">{ event.Title }</h1>
+			if (mvc.IsEditing) {
+				<input
+					type="text"
+					class="card-title"
+					placeholder="Enter a title"
+					value={ event.Title }
+				/>
+			} else {
+				<h1 class="card-title">{ event.Title }</h1>
+			}
 		</div>
 		<div class="card-content">
 			<div class="card-grid">
 				<div class="card-field">
 					<span class="field-label">Game Master</span>
-					<span class="field-value">{ event.GameMaster }</span>
+					if (mvc.IsEditing) {
+						<input
+							type="text"
+							class="field-value"
+							placeholder="Enter a game master"
+							value={ event.GameMaster }
+						/>
+					} else {
+						<p class="field-value">{ event.GameMaster }</p>
+					}
 				</div>
 				<div class="card-field">
 					<span class="field-label">System</span>
-					<span class="field-value">{ event.System }</span>
+					if (mvc.IsEditing) {
+						<input
+							type="text"
+							class="field-value"
+							placeholder="Enter a system"
+							value={ event.System }
+						/>
+					} else {
+						<p class="field-value">{ event.System }</p>
+					}
 				</div>
 			</div>
 			<div class="card-field">
 				<span class="field-label">Description</span>
-				<span class="field-value">{ event.ShortDescription }</span>
+				if (mvc.IsEditing) {
+					<textarea
+						class="field-value"
+						rows="4"
+						cols="50"
+						placeholder="Enter a description"
+					>{ event.ShortDescription }</textarea>
+				} else {
+					<p class="field-value">{ event.ShortDescription }</p>
+				}
 			</div>
 		</div>
 	</label>
+	if (mvc.IsEditing) {
+		@components.EditEvent(event)
+	}
 }

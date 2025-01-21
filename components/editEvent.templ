@@ -71,24 +71,7 @@ templ EditEvent(event models.Event) {
 		</style>
 	<div
 		id={ fmt.Sprintf("editId%d", event.ID) }
-		data-signals={ templ.JSONString(event) }
 	>
-		<fieldset>
-			<legend>Title</legend>
-			<input value={ event.Title }/>
-		</fieldset>
-		<fieldset>
-			<legend>Game Master</legend>
-			<input value={ event.GameMaster }/>
-		</fieldset>
-		<fieldset>
-			<legend>System</legend>
-			<input value={ event.System }/>
-		</fieldset>
-		<fieldset>
-			<legend>Short Description</legend>
-			<input value={ event.ShortDescription }/>
-		</fieldset>
 		<button class="button" data-on-click={ fmt.Sprintf("@put('/asd%s')", utils.NumberToString(event.ID)) }>Save</button>
 		<button class="button" data-on-click={ "@put('/event/cancel')" }>Cancel</button>
 	</div>

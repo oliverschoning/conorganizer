@@ -23,5 +23,5 @@ body {
 .events-grid {
 	display: grid;
 	grid-template-columns: var(--events-grid);
-	gap: 1rem;
+	gap: 0.5rem;
 }

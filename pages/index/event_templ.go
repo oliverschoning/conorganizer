@@ -47,7 +47,7 @@ func GetEvent(db *sql.DB, id int, logger *slog.Logger) (models.Event, error) {
 	return event, nil
 }
 
-func EventMVCView(mvc *EventMVC, db *sql.DB, logger *slog.Logger) templ.Component {
+func EventMVCView(mvc *EventMVC2, db *sql.DB, logger *slog.Logger) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
