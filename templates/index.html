@@ -1,0 +1,6 @@
+{{define "content"}}
+	<h1>Let's Go HTMX!</h1>
+	<p>Testing testing</p>
+	<button hx-get="/data" hx-trigger="click" hx-target="#result">load</button>
+	<div id="result"></div>
+{{end}}
