@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"html/template"
+	"encoding/json"
 
 // todo: mux for dynamic routing, it has been installed,
 	//"github.com/gorilla/mux"
@@ -22,12 +23,27 @@ func main() {
 		}{
 			Title: "Regncon: program",
 		}
-		err = tmpl.ExecuteTemplate(w, "layout", data)
+		err = tmpl.ExecuteTemplate(w, "layout.html", data)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	})
 
 	// start server, log errors
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":3000", nil))
+}
+
+func dataHandler(w http.ResponseWriter, r *http.Request) {
+	// sample data
+	data := map[string]string{"message":"Hello from HTMX"}
+
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().set("Content-Type", "application/json")
+
+	
 }
