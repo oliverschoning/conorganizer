@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
 	"html/template"
 	"log"
 	"net/http"
@@ -41,13 +40,25 @@ func main() {
 		}{
 			Title: "Regncon: program",
 		}
-		w.Header().Set("Content-Type", "text/html")
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		err = tmpl.ExecuteTemplate(w, "layout.html", data)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	})
-
+	http.HandleFunc("/add_event", func(w http.ResponseWriter, r *http.Request) {
+		tmpl, err := template.ParseFiles("templates/layout.html", "templates/addEvent.html")
+		data := struct {
+			Title string
+		}{
+			Title: "Regncon: legg til arrangement",
+		}
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		err = tmpl.ExecuteTemplate(w, "layout.html", data)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	})
 	http.HandleFunc("/data", dataHandler)
 
 	// start server, log errors
@@ -65,15 +76,14 @@ func dataHandler(w http.ResponseWriter, r *http.Request) {
 	var data string
 	rows.Next()
 	err = rows.Scan(&data)
-	jsonData, err := json.Marshal(data)
 	log.Println(data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	_, err = w.Write(jsonData)
+	w.Header().Set("Content-Type", "text/html")
+	_, err = w.Write([]byte(data))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

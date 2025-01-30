@@ -1,8 +1,20 @@
 {{define "content"}}
 	<h1>Legg til arrangement</h1>
-	<form action="/eventAdder">
-        
-        <button hx-get="/data" hx-trigger="click" hx-target="#result">load</button>
+	<form hx-post="/eventAdder" hx-target="#result" hx-swap="outerHTML">
+        <input type="text" name="title" placeholder="Tittel på arrangementet">
+        <textarea name="description" placeholder="Beskrivelse"></textarea>
+        <input type="text" name="image_url" placeholder="URL til bilde">
+        <input type="text" name="system" placeholder="System">
+        <input type="text" name="host_name" placeholder="Ditt navn">
+        <input type="number" name="max_players" placeholder="Maks antall spillere">
+        <input type="checkbox" name="child_friendly" id="child_friendly"><label for="child_friendly">barnevennlig</label>
+        <input type="checkbox" name="adults_only" id="adults_only"><label for="adults_only">kun for voksne</label>
+        <input type="checkbox" name="beginner_friendly" id="beginner_friendly"><label for="beginner_friendly">nybegynnervennlig</label>
+        <input type="checkbox" name="experienced_only" id="experienced_only"><label for="experienced_only">kun for erfarne</label>
+        <input type="checkbox" name="can_be_run_in_english" id="can_be_run_in_english"><label for="can_be_run_in_english">kan kjøres på engelsk</label>
+        <input type="checkbox" name="short_running" id="short_running"><label for="short_running">kan vare mindre enn tre timer</label>
+        <input type="checkbox" name="long_running" id="long_running"><label for="long_running">kan vare mer enn seks timer</label>
+        <input type="submit" value="Legg til arrangement">
     </form>
 	<div id="result"></div>
 {{end}}
