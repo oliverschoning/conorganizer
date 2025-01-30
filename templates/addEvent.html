@@ -1,0 +1,8 @@
+{{define "content"}}
+	<h1>Legg til arrangement</h1>
+	<form action="/eventAdder">
+        
+        <button hx-get="/data" hx-trigger="click" hx-target="#result">load</button>
+    </form>
+	<div id="result"></div>
+{{end}}
