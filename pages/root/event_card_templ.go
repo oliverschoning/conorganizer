@@ -48,27 +48,23 @@ func EventCard(event models.Event, editIdx int) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" style=\"position: relative;\"><div style=\"\r\n\t    width: 350px;\r\n\t    border-radius: 15px;\r\n\t    overflow: hidden;\r\n\t    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);\r\n\t    background-color: #3b4252;\r\n\t    color: #eceff4;\" data-on-click=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" style=\"position: relative;\"><a href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var3 string
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("@get('/event/%d')", event.ID))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/event_card.templ`, Line: 22, Col: 61}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+		var templ_7745c5c3_Var3 templ.SafeURL = templ.SafeURL(fmt.Sprintf("/event/%d", event.ID))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var3)))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><div style=\"position: relative;\"><img src=\"/static/images/events/dice-small.webp\" style=\"width: 100%; display: block;\"><div style=\"\r\n\t\t\t    position: absolute;\r\n\t\t\t    top: 0;\r\n\t\t\t    left: 0;\r\n\t\t\t    width: 100%;\r\n\t\t\t    height: 100%;\r\n\t\t\t    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8));\r\n\t\t\t    display: flex;\r\n\t\t\t    justify-content: center;\r\n\t\t\t    align-items: center;\r\n\t\t\t    color: #eceff4;\r\n\t\t\t    text-align: center;\r\n\t\t\t    padding: 10px;\r\n\t\t\t    box-sizing: border-box;\"><h1>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><div style=\"\r\n\t\t    width: 350px;\r\n\t\t    border-radius: 15px;\r\n\t\t    overflow: hidden;\r\n\t\t    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);\r\n\t\t    background-color: #3b4252;\r\n\t\t    color: #eceff4;\"><div style=\"position: relative;\"><img src=\"/static/images/events/dice-small.webp\" style=\"width: 100%; display: block;\"><div style=\"\r\n\t\t\t\t    position: absolute;\r\n\t\t\t\t    top: 0;\r\n\t\t\t\t    left: 0;\r\n\t\t\t\t    width: 100%;\r\n\t\t\t\t    height: 100%;\r\n\t\t\t\t    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8));\r\n\t\t\t\t    display: flex;\r\n\t\t\t\t    justify-content: center;\r\n\t\t\t\t    align-items: center;\r\n\t\t\t\t    color: #eceff4;\r\n\t\t\t\t    text-align: center;\r\n\t\t\t\t    padding: 10px;\r\n\t\t\t\t    box-sizing: border-box;\"><h1>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(event.Title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/event_card.templ`, Line: 45, Col: 22}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/event_card.templ`, Line: 45, Col: 23}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -81,7 +77,7 @@ func EventCard(event models.Event, editIdx int) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(event.GameMaster)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/event_card.templ`, Line: 49, Col: 78}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/event_card.templ`, Line: 49, Col: 79}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -94,7 +90,7 @@ func EventCard(event models.Event, editIdx int) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(event.System)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/event_card.templ`, Line: 50, Col: 82}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/event_card.templ`, Line: 50, Col: 83}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -107,13 +103,13 @@ func EventCard(event models.Event, editIdx int) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(event.ShortDescription)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/event_card.templ`, Line: 51, Col: 72}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/event_card.templ`, Line: 51, Col: 73}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</p></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</p></div></div></a></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

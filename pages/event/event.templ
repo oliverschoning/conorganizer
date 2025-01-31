@@ -1,0 +1,47 @@
+package event
+
+import (
+	"database/sql"
+	"fmt"
+	"github.com/Regncon/conorganizer/models"
+	"log/slog"
+)
+
+type EventState struct {
+	Event     models.Event `json:"event"`
+	Idx       int          `json:"editingIdx"`
+	IsEditing bool         `json:"isEditing"`
+}
+
+templ EventMvcView(state *EventState, db *sql.DB, logger *slog.Logger) {
+	<div id="events-container">
+		<div class="events-grid"></div>
+		<code>
+			<pre data-text="ctx.signals.JSON()"></pre>
+		</code>
+	</div>
+}
+
+func GetEvent(db *sql.DB, id int, logger *slog.Logger) (models.Event, error) {
+	query := fmt.Sprintf("SELECT id, title, short_description, game_master, system FROM events where id = %d", id)
+	fmt.Println(query, "in query")
+	rows, err := db.Query(query)
+	if err != nil {
+		logger.Error("Error fetching events", "err", err)
+		return models.Event{}, err
+	}
+	defer rows.Close()
+
+	var event models.Event
+	for rows.Next() {
+		var mappedEvent models.Event
+		if err := rows.Scan(&mappedEvent.ID, &mappedEvent.Title, &mappedEvent.ShortDescription, &mappedEvent.GameMaster, &mappedEvent.System); err != nil {
+			logger.Error("Error mapping event", "err", err)
+			return models.Event{}, err
+		}
+		fmt.Printf("mapped event: %+v\n", event)
+		event = mappedEvent
+	}
+	fmt.Printf("Fetched event: %+v\n", event)
+	return event, nil
+}

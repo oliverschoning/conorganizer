@@ -7,8 +7,6 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
-	"slices"
-	"strconv"
 	"time"
 
 	"github.com/Regncon/conorganizer/models"
@@ -144,129 +142,6 @@ func SetupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 			}
 		})
 
-	})
-	router.Route("/event", func(eventRouter chi.Router) {
-		eventRouter.Get("/{id}", func(w http.ResponseWriter, r *http.Request) {
-
-			idString := chi.URLParam(r, "id")
-			id, err := strconv.Atoi(idString)
-			if err != nil {
-				logger.Error("Id not found", "err", err, "id", idString)
-				http.Error(w, "ID must be numeric", http.StatusBadRequest)
-				return
-			}
-			sessionID, mvc, err := mvcSession(w, r)
-			sse := datastar.NewSSE(w, r)
-			if err != nil {
-				sse.ConsoleError(err)
-				return
-			}
-
-			mvc.Idx = id
-			if err := saveMVC(r.Context(), sessionID, mvc); err != nil {
-				sse.ConsoleError(err)
-				return
-			}
-
-		})
-		eventRouter.Put("/{id}/edit", func(w http.ResponseWriter, r *http.Request) {
-			idString := chi.URLParam(r, "id")
-			id, err := strconv.Atoi(idString)
-			if err != nil {
-				logger.Error("Id not found", "err", err, "id", idString)
-				http.Error(w, "ID must be numeric", http.StatusBadRequest)
-				return
-			}
-
-			sessionID, mvc, err := mvcSession(w, r)
-			sse := datastar.NewSSE(w, r)
-			if err != nil {
-				sse.ConsoleError(err)
-				return
-			}
-
-			mvc.Idx = id
-			mvc.IsEditing = true
-			if err := saveMVC(r.Context(), sessionID, mvc); err != nil {
-				sse.ConsoleError(err)
-				return
-			}
-
-		})
-		eventRouter.Put("/{id}/save", func(w http.ResponseWriter, r *http.Request) {
-			idString := chi.URLParam(r, "id")
-			id, err := strconv.Atoi(idString)
-			if err != nil {
-				logger.Error("Id not found", "err", err, "id", idString)
-				http.Error(w, "ID must be numeric", http.StatusBadRequest)
-				return
-			}
-
-			var updatedEvent models.Event
-			updatedEvent.ID = int64(id)
-			err = datastar.ReadSignals(r, &updatedEvent)
-			if err != nil {
-				logger.Error("Error reading signals", "err", err)
-				fmt.Printf("Accessed trough browser not signal %v", err)
-			}
-
-			sessionID, mvc, err := mvcSession(w, r)
-			sse := datastar.NewSSE(w, r)
-			if err != nil {
-				sse.ConsoleError(err)
-				return
-			}
-			eventIndex := slices.IndexFunc(mvc.Events, func(c models.Event) bool { return c.ID == updatedEvent.ID })
-			fmt.Printf("idx: %d,Event to update: %+v\n,", eventIndex, mvc.Events[eventIndex])
-
-			err = updateDb(db, logger, updatedEvent, w, r)
-			if err != nil {
-				logger.Error("Error updating event", "err", err)
-				sse.ConsoleError(err)
-				return
-			}
-			mvc.Events[eventIndex] = updatedEvent
-			mvc.IsEditing = false
-
-			if err := saveMVC(r.Context(), sessionID, mvc); err != nil {
-				sse.ConsoleError(err)
-				return
-			}
-
-		})
-		eventRouter.Put("/cancel", func(w http.ResponseWriter, r *http.Request) {
-
-			sessionID, mvc, err := mvcSession(w, r)
-			sse := datastar.NewSSE(w, r)
-			if err != nil {
-				sse.ConsoleError(err)
-				return
-			}
-
-			mvc.IsEditing = false
-			if err := saveMVC(r.Context(), sessionID, mvc); err != nil {
-				sse.ConsoleError(err)
-				return
-			}
-
-		})
-		eventRouter.Put("/back", func(w http.ResponseWriter, r *http.Request) {
-
-			sessionID, mvc, err := mvcSession(w, r)
-			sse := datastar.NewSSE(w, r)
-			if err != nil {
-				sse.ConsoleError(err)
-				return
-			}
-
-			mvc.Idx = -1
-			mvc.IsEditing = false
-			if err := saveMVC(r.Context(), sessionID, mvc); err != nil {
-				sse.ConsoleError(err)
-				return
-			}
-
-		})
 	})
 
 	return nil
