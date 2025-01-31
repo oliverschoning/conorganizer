@@ -167,7 +167,7 @@ func templCounterExampleInitialContents(global string, user string) templ.Compon
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div id=\"counts\">test</div></div><div data-signals=\"{\n    foo: 1234,\n    bar: &#39;bar&#39;\n}\"><div data-computed-baz=\"$foo * 2\"></div><input type=\"number\" step=\"1\" min=\"0\" data-bind-foo> <input type=\"text\" data-bind-baz> <input type=\"text\" data-bind-bar></div><code><pre data-text=\"ctx.signals.JSON()\"></pre></code></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div id=\"counts\">test</div></div><div data-signals=\"{\r\n    foo: 1234,\r\n    bar: &#39;bar&#39;\r\n}\"><div data-computed-baz=\"$foo * 2\"></div><input type=\"number\" step=\"1\" min=\"0\" data-bind-foo> <input type=\"text\" data-bind-baz> <input type=\"text\" data-bind-bar></div><code><pre data-text=\"ctx.signals.JSON()\"></pre></code></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

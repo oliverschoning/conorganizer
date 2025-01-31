@@ -12,7 +12,6 @@ require (
 	github.com/gorilla/sessions v1.4.0
 	github.com/nats-io/nats-server/v2 v2.10.24
 	github.com/nats-io/nats.go v1.38.0
-	github.com/samber/lo v1.47.0
 	github.com/starfederation/datastar v0.21.4
 	golang.org/x/sync v0.10.0
 	modernc.org/sqlite v1.34.4
@@ -44,6 +43,7 @@ require (
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/rzajac/clock v0.2.0 // indirect
 	github.com/rzajac/zflake v0.8.0 // indirect
+	github.com/samber/lo v1.47.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/ysmood/fetchup v0.2.4 // indirect
 	github.com/ysmood/goob v0.4.0 // indirect
