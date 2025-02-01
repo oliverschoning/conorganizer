@@ -6,7 +6,7 @@ $containerName = "dev-container"
 $containerWorkDir = "/home/devuser/app"
 
 # Check if the Docker image exists
-$imageExists = docker images --format "{{.Repository}}:{{.Tag}}" | Select-String "$imageName:latest"
+$imageExists = docker images --format "{{.Repository}}:{{.Tag}}" | findstr "$imageName:latest"
 
 if (-not $imageExists) {
     Write-Host "Docker image '$imageName' does not exist. Building the image using $dockerFilePath..."
