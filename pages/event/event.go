@@ -33,7 +33,7 @@ func SetupEventRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 	logger.Info("JetStream client created successfully")
 
 	kv, err := js.CreateOrUpdateKeyValue(context.Background(), jetstream.KeyValueConfig{
-		Bucket:      "regncon",
+		Bucket:      "regncon_2",
 		Description: "regncon 2025",
 		Compression: true,
 		TTL:         time.Hour,
@@ -78,6 +78,7 @@ func SetupEventRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 			if err != jetstream.ErrKeyNotFound {
 				return "", nil, fmt.Errorf("failed to get key value: %w", err)
 			}
+
 			resetState(state, id)
 
 			if err := saveState(ctx, sessionID, state); err != nil {
@@ -88,14 +89,73 @@ func SetupEventRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 				return "", nil, fmt.Errorf("failed to unmarshal state: %w", err)
 			}
 		}
+
 		return sessionID, state, nil
 	}
 
 	router.Route("/event", func(eventRouter chi.Router) {
-		// eventRouter.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		eventRouter.Get("/{id}/stream", func(w http.ResponseWriter, r *http.Request) {
+			idString := chi.URLParam(r, "id")
+			id, err := strconv.Atoi(idString)
+			if err != nil {
+				logger.Error("Id not found", "err", err, "id", idString)
+				http.Error(w, "ID must be numeric", http.StatusBadRequest)
+				return
+			}
+			index.Index("event", fmt.Sprintf("/event/%d", id)).Render(r.Context(), w)
+			sessionID, state, err := stateSessionWithId(w, r, id)
+			if err != nil {
+				logger.Error("failed getting mvc session", "err", err.Error())
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			logger.Info("Session ID and MVC retrieved successfully", "sessionID", sessionID)
 
-		// 	index.Index("Events", "/event").Render(r.Context(), w)
-		// })
+			sse := datastar.NewSSE(w, r)
+
+			// Watch for updates
+			ctx := r.Context()
+			watcher, err := kv.Watch(ctx, sessionID)
+			if err != nil {
+				logger.Error("Error creating watcher", "err", err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			defer watcher.Stop()
+			logger.Info("Watcher created successfully")
+
+			for {
+				select {
+				case <-ctx.Done():
+					logger.Info("Context done")
+					return
+				case entry := <-watcher.Updates():
+					if entry == nil {
+						continue
+					}
+
+					val := entry.Value()
+					var data interface{}
+					_ = json.Unmarshal(val, &data)
+					pretty, _ := json.MarshalIndent(data, "", "  ")
+					fmt.Println(string(pretty))
+
+					if err := json.Unmarshal(entry.Value(), state); err != nil {
+						logger.Error("Error unmarshalling entry", "err", err)
+						http.Error(w, err.Error(), http.StatusInternalServerError)
+						return
+					}
+
+					c := EventView(state, id, db, logger)
+					if err := sse.MergeFragmentTempl(c); err != nil {
+						logger.Error("Error merging fragment template", "err", err)
+						sse.ConsoleError(err)
+						return
+					}
+				}
+			}
+
+		})
 		eventRouter.Get("/{id}", func(w http.ResponseWriter, r *http.Request) {
 
 			idString := chi.URLParam(r, "id")
@@ -105,19 +165,7 @@ func SetupEventRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 				http.Error(w, "ID must be numeric", http.StatusBadRequest)
 				return
 			}
-			index.Index("Events", fmt.Sprintf("/event/%d", id)).Render(r.Context(), w)
-			sessionID, state, err := stateSessionWithId(w, r, id)
-			sse := datastar.NewSSE(w, r)
-			if err != nil {
-				sse.ConsoleError(err)
-				return
-			}
-
-			state.Idx = id
-			if err := saveState(r.Context(), sessionID, state); err != nil {
-				sse.ConsoleError(err)
-				return
-			}
+			index.Index("Event", fmt.Sprintf("/event/%d/stream", id)).Render(r.Context(), w)
 
 		})
 		eventRouter.Put("/{id}/edit", func(w http.ResponseWriter, r *http.Request) {
