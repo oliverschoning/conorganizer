@@ -1,25 +1,20 @@
 # Define variables
 $imageName = "my-dev-environment"
-$dockerFilePath = "Dockerfile"
-$workDir = (Get-Location).Path
+$dockerFilePath = "Dockerfile" # Specify the correct Dockerfile
+$workDir = (Get-Location).Path # Use the current directory
 $containerName = "dev-container"
 $containerWorkDir = "/home/devuser/app"
 
 # Check if the Docker image exists
-Write-Host "Checking if image '$imageName' exists..."
-$imageList = docker images --format "{{.Repository}}:{{.Tag}}" | Out-String
+$imageExists = docker images --format "{{.Repository}}:{{.Tag}}" | "{0}:latest" -f $imageName
 
-if ($imageList -match "$imageName:latest") {
-    Write-Host "Docker image '$imageName:latest' exists."
-} else {
-    Write-Host "Docker image '$imageName:latest' does not exist. Building..."
+if (-not $imageExists) {
+    Write-Host "Docker image '$imageName' does not exist. Building the image using $dockerFilePath..."
     docker build -t $imageName -f $dockerFilePath $workDir
-
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Failed to build Docker image. Exiting..."
         exit 1
     }
-
     Write-Host "Docker image '$imageName' built successfully."
 }
 
@@ -30,5 +25,4 @@ docker run -it --rm `
     -v "${workDir}:${containerWorkDir}" `
     -p 8080:8080 `
     -p 7331:7331 `
-    --user 1000:1000 ` # Run the container as devuser (if that user exists in the image)
     $imageName
