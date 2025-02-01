@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Regncon/conorganizer/pages/root"
 	"github.com/delaneyj/toolbelt"
 	"github.com/delaneyj/toolbelt/embeddednats"
 	"github.com/go-chi/chi/v5"
@@ -55,7 +54,7 @@ func SetupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 	}
 
 	resetMVC := func(mvc *EventState) {
-		events, err := root.GetEvents(db, logger)
+		events, err := getEvents(db, logger)
 		if err != nil {
 			logger.Error("Could not get events", "err", err)
 		}

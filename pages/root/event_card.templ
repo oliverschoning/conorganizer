@@ -5,7 +5,6 @@ import (
 	"github.com/Regncon/conorganizer/models"
 )
 
-//TODO FIX HREF
 templ EventCard(event models.Event, editIdx int) {
 	<div
 		id={ fmt.Sprintf("editId%d", event.ID) }
