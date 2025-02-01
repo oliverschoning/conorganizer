@@ -6,7 +6,7 @@ $containerName = "dev-container"
 $containerWorkDir = "/home/devuser/app"
 
 # Check if the Docker image exists
-Write-Host "Checking if image '$imageName:latest' exists..."
+Write-Host "Checking if image '$imageName' exists..."
 $imageList = docker images --format "{{.Repository}}:{{.Tag}}" | Out-String
 
 if ($imageList -match "$imageName:latest") {
