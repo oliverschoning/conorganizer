@@ -33,7 +33,7 @@ func SetupEventRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 	logger.Info("JetStream client created successfully")
 
 	kv, err := js.CreateOrUpdateKeyValue(context.Background(), jetstream.KeyValueConfig{
-		Bucket:      "regncon_2",
+		Bucket:      "regncon",
 		Description: "regncon 2025",
 		Compression: true,
 		TTL:         time.Hour,
@@ -283,7 +283,7 @@ func upsertSessionID(store sessions.Store, r *http.Request, w http.ResponseWrite
 			return "", fmt.Errorf("failed to save session: %w", err)
 		}
 	}
-	return id, nil
+	return "eventState_"+id, nil
 }
 
 func updateDb(db *sql.DB, logger *slog.Logger, updatedEvent models.Event, w http.ResponseWriter, r *http.Request) error {
