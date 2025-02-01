@@ -102,7 +102,7 @@ func SetupEventRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 				http.Error(w, "ID must be numeric", http.StatusBadRequest)
 				return
 			}
-			index.Index("event", fmt.Sprintf("/event/%d", id)).Render(r.Context(), w)
+
 			sessionID, state, err := stateSessionWithId(w, r, id)
 			if err != nil {
 				logger.Error("failed getting mvc session", "err", err.Error())
