@@ -10,7 +10,6 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"database/sql"
-	"fmt"
 	"github.com/Regncon/conorganizer/models"
 	"github.com/Regncon/conorganizer/pages/root"
 	"log/slog"
@@ -43,39 +42,15 @@ func EventsView(state *EventState, db *sql.DB, logger *slog.Logger) templ.Compon
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		events, err := root.GetEvents(db, logger)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"events-container\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"events-container\"><div class=\"events-grid\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if err != nil {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<p>Error fetching events: ")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var2 string
-			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(err.Error())
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/allEvents.templ`, Line: 21, Col: 42}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</p>return")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"events-grid\">")
+		templ_7745c5c3_Err = ShowEvents(state, state.Events, db, logger).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = ShowEvents(state, events, db, logger).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div><code><pre data-text=\"ctx.signals.JSON()\"></pre></code></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div><code><pre data-text=\"ctx.signals.JSON()\"></pre></code></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -99,12 +74,11 @@ func ShowEvents(state *EventState, events []models.Event, db *sql.DB, logger *sl
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var3 == nil {
-			templ_7745c5c3_Var3 = templ.NopComponent
+		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var2 == nil {
+			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		fmt.Println("Id: ", state.Idx, state.Idx == -1)
 		for _, event := range events {
 			templ_7745c5c3_Err = root.EventCard(event, state.Idx).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
@@ -113,6 +87,74 @@ func ShowEvents(state *EventState, events []models.Event, db *sql.DB, logger *sl
 		}
 		return nil
 	})
+}
+
+func getEvents(db *sql.DB, logger *slog.Logger) ([]models.Event, error) {
+	query := `
+		SELECT
+			id,
+			suggested_event_id,
+			title,
+			description,
+			image_url,
+			system,
+			host_name,
+			host,
+			room_name,
+			pulje_name,
+			max_players,
+			child_friendly,
+			adults_only,
+			beginner_friendly,
+			experienced_only,
+			can_be_run_in_english,
+			long_running,
+			short_running,
+			inserted_time
+		FROM events
+	`
+	rows, err := db.Query(query)
+	if err != nil {
+		logger.Error("Error fetching events", "err", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	var events []models.Event
+	for rows.Next() {
+		var event models.Event
+		err := rows.Scan(
+			&event.ID,
+			&event.SuggestedEventID,
+			&event.Title,
+			&event.Description,
+			&event.ImageURL,
+			&event.System,
+			&event.HostName,
+			&event.Host,
+			&event.RoomName,
+			&event.PuljeName,
+			&event.MaxPlayers,
+			&event.ChildFriendly,
+			&event.AdultsOnly,
+			&event.BeginnerFriendly,
+			&event.ExperiencedOnly,
+			&event.CanBeRunInEnglish,
+			&event.LongRunning,
+			&event.ShortRunning,
+			&event.InsertedTime,
+		)
+		if err != nil {
+			logger.Error("Error fetching events", "err", err)
+			return nil, err
+		}
+		events = append(events, event)
+	}
+	if err := rows.Err(); err != nil {
+		logger.Error("Error iterating over events", "err", err)
+		return nil, err
+	}
+	return events, nil
 }
 
 var _ = templruntime.GeneratedTemplate

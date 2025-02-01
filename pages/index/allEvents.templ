@@ -2,7 +2,6 @@ package index
 
 import (
 	"database/sql"
-	"fmt"
 	"github.com/Regncon/conorganizer/models"
 	"github.com/Regncon/conorganizer/pages/root"
 	"log/slog"
@@ -15,14 +14,9 @@ type EventState struct {
 }
 
 templ EventsView(state *EventState, db *sql.DB, logger *slog.Logger) {
-	{{ events, err := root.GetEvents(db, logger) }}
 	<div id="events-container">
-		if err != nil {
-			<p>Error fetching events: { err.Error() }</p>
-			return
-		}
 		<div class="events-grid">
-			@ShowEvents(state, events, db, logger)
+			@ShowEvents(state, state.Events, db, logger)
 		</div>
 		<code>
 			<pre data-text="ctx.signals.JSON()"></pre>
@@ -31,8 +25,75 @@ templ EventsView(state *EventState, db *sql.DB, logger *slog.Logger) {
 }
 
 templ ShowEvents(state *EventState, events []models.Event, db *sql.DB, logger *slog.Logger) {
-	{{ fmt.Println("Id: ", state.Idx, state.Idx == -1) }}
 	for _, event := range events {
 		@root.EventCard(event, state.Idx)
 	}
+}
+
+func getEvents(db *sql.DB, logger *slog.Logger) ([]models.Event, error) {
+	query := `
+		SELECT
+			id,
+			suggested_event_id,
+			title,
+			description,
+			image_url,
+			system,
+			host_name,
+			host,
+			room_name,
+			pulje_name,
+			max_players,
+			child_friendly,
+			adults_only,
+			beginner_friendly,
+			experienced_only,
+			can_be_run_in_english,
+			long_running,
+			short_running,
+			inserted_time
+		FROM events
+	`
+	rows, err := db.Query(query)
+	if err != nil {
+		logger.Error("Error fetching events", "err", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	var events []models.Event
+	for rows.Next() {
+		var event models.Event
+		err := rows.Scan(
+			&event.ID,
+			&event.SuggestedEventID,
+			&event.Title,
+			&event.Description,
+			&event.ImageURL,
+			&event.System,
+			&event.HostName,
+			&event.Host,
+			&event.RoomName,
+			&event.PuljeName,
+			&event.MaxPlayers,
+			&event.ChildFriendly,
+			&event.AdultsOnly,
+			&event.BeginnerFriendly,
+			&event.ExperiencedOnly,
+			&event.CanBeRunInEnglish,
+			&event.LongRunning,
+			&event.ShortRunning,
+			&event.InsertedTime,
+		)
+		if err != nil {
+			logger.Error("Error fetching events", "err", err)
+			return nil, err
+		}
+		events = append(events, event)
+	}
+	if err := rows.Err(); err != nil {
+		logger.Error("Error iterating over events", "err", err)
+		return nil, err
+	}
+	return events, nil
 }
