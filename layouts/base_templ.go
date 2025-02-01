@@ -29,7 +29,7 @@ func Base(title string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"en\" data-theme=\"dark\"><head><title>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"en\"><head><title>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -42,7 +42,7 @@ func Base(title string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</title><meta name=\"color-scheme\" content=\"dark\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link href=\"https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&amp;family=Inter:wght@100..900&amp;family=Gideon+Roman:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&amp;display=swap\" rel=\"stylesheet\"><script src=\"https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js\"></script><script defer type=\"module\" src=\"/static/datastar/datastar.js\"></script><link href=\"/static/global.css\" rel=\"stylesheet\" type=\"text/css\"></head><body class=\"flex flex-col h-screen\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</title><meta name=\"color-scheme\" content=\"dark\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link rel=\"preconnect\" href=\"https://code.iconify.design\"><link rel=\"preload\" as=\"style\" onload=\"this.onload=null;this.rel=&#39;stylesheet&#39;\" href=\"https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&amp;family=Inter:wght@100..900&amp;family=Gideon+Roman:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&amp;display=swap\"><script defer src=\"https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js\"></script><script defer type=\"module\" src=\"/static/datastar/datastar.js\"></script><link rel=\"preload\" href=\"/static/global.css\" as=\"style\" onload=\"this.onload=null;this.rel=&#39;stylesheet&#39;\"></head><body class=\"flex flex-col h-screen\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
