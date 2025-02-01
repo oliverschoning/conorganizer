@@ -15,27 +15,6 @@ import (
 	"log/slog"
 )
 
-func GetEvents(db *sql.DB, logger *slog.Logger) ([]models.Event, error) {
-	query := "SELECT id, title, short_description, game_master, system FROM events"
-	rows, err := db.Query(query)
-	if err != nil {
-		logger.Error("Error fetching events", "err", err)
-		return nil, err
-	}
-	defer rows.Close()
-
-	var events []models.Event
-	for rows.Next() {
-		var event models.Event
-		if err := rows.Scan(&event.ID, &event.Title, &event.ShortDescription, &event.GameMaster, &event.System); err != nil {
-			logger.Error("Error fetching events", "err", err)
-			return nil, err
-		}
-		events = append(events, event)
-	}
-	return events, nil
-}
-
 func Page(db *sql.DB, logger *slog.Logger) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -86,7 +65,7 @@ func Page(db *sql.DB, logger *slog.Logger) templ.Component {
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(err.Error())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_page.templ`, Line: 39, Col: 43}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_page.templ`, Line: 18, Col: 43}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
@@ -102,7 +81,7 @@ func Page(db *sql.DB, logger *slog.Logger) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		for _, event := range events {
-			templ_7745c5c3_Err = EventCard(event, int(event.ID)).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = EventCard(event, event.ID).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -113,6 +92,74 @@ func Page(db *sql.DB, logger *slog.Logger) templ.Component {
 		}
 		return nil
 	})
+}
+
+func GetEvents(db *sql.DB, logger *slog.Logger) ([]models.Event, error) {
+	query := `
+		SELECT
+			id,
+			suggested_event_id,
+			title,
+			description,
+			image_url,
+			system,
+			host_name,
+			host,
+			room_name,
+			pulje_name,
+			max_players,
+			child_friendly,
+			adults_only,
+			beginner_friendly,
+			experienced_only,
+			can_be_run_in_english,
+			long_running,
+			short_running,
+			inserted_time
+		FROM events
+	`
+	rows, err := db.Query(query)
+	if err != nil {
+		logger.Error("Error fetching events", "err", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	var events []models.Event
+	for rows.Next() {
+		var event models.Event
+		err := rows.Scan(
+			&event.ID,
+			&event.SuggestedEventID,
+			&event.Title,
+			&event.Description,
+			&event.ImageURL,
+			&event.System,
+			&event.HostName,
+			&event.Host,
+			&event.RoomName,
+			&event.PuljeName,
+			&event.MaxPlayers,
+			&event.ChildFriendly,
+			&event.AdultsOnly,
+			&event.BeginnerFriendly,
+			&event.ExperiencedOnly,
+			&event.CanBeRunInEnglish,
+			&event.LongRunning,
+			&event.ShortRunning,
+			&event.InsertedTime,
+		)
+		if err != nil {
+			logger.Error("Error fetching events", "err", err)
+			return nil, err
+		}
+		events = append(events, event)
+	}
+	if err := rows.Err(); err != nil {
+		logger.Error("Error iterating over events", "err", err)
+		return nil, err
+	}
+	return events, nil
 }
 
 var _ = templruntime.GeneratedTemplate

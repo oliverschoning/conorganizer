@@ -3,19 +3,18 @@ package index
 import (
 	"database/sql"
 	"fmt"
-	"github.com/Regncon/conorganizer/components"
 	"github.com/Regncon/conorganizer/models"
 	"github.com/Regncon/conorganizer/pages/root"
 	"log/slog"
 )
 
-type EventMVC struct {
-	Events    []models.Event `json:"event"`
+type EventState struct {
+	Events    []models.Event `json:"events"`
 	Idx       int            `json:"editingIdx"`
 	IsEditing bool           `json:"isEditing"`
 }
 
-templ AllEventMVCView(mvc *EventMVC, db *sql.DB, logger *slog.Logger) {
+templ EventsView(state *EventState, db *sql.DB, logger *slog.Logger) {
 	{{ events, err := root.GetEvents(db, logger) }}
 	<div id="events-container">
 		if err != nil {
@@ -23,7 +22,7 @@ templ AllEventMVCView(mvc *EventMVC, db *sql.DB, logger *slog.Logger) {
 			return
 		}
 		<div class="events-grid">
-			@ShowEvents(mvc, events, db, logger)
+			@ShowEvents(state, events, db, logger)
 		</div>
 		<code>
 			<pre data-text="ctx.signals.JSON()"></pre>
@@ -31,224 +30,9 @@ templ AllEventMVCView(mvc *EventMVC, db *sql.DB, logger *slog.Logger) {
 	</div>
 }
 
-templ ShowEvents(mvc *EventMVC, events []models.Event, db *sql.DB, logger *slog.Logger) {
-	{{ fmt.Println("Id: ", mvc.Idx, mvc.Idx == -1) }}
-	if (mvc.Idx == -1) {
-		for _, event := range events {
-			@root.EventCard(event, mvc.Idx)
-		}
-	} else {
-		{{ event, err := GetEvent(db, mvc.Idx, logger) }}
-		if err != nil {
-			<p>Error fetching events: { err.Error() }</p>
-			return
-		}
-		@EventCard(event, mvc)
-	}
-}
-
-templ EventCard(event models.Event, mvc *EventMVC) {
-	<style>
-		.events-grid {
-			--events-grid: 1fr;
-		}
-		.back-btn {
-			width: 100%;
-		}
-		/* Reset and base styles */
-		* {
-			margin: 0;
-			padding: 0;
-			box-sizing: border-box;
-		}
-		/* Card styles */
-		.card {
-			border-radius: 0.5rem;
-			box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-			width: 100%;
-			overflow: hidden;
-			cursor: pointer;
-		}
-
-		.card-header {
-			position: relative;
-			height: 16rem;
-		}
-
-		.card-image {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-		}
-
-		.card-title {
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-			color: white;
-			font-size: 3.5rem;
-			font-weight: bold;
-			text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-		}
-
-		.card-content {
-			padding: 1.5rem;
-			background-color: #21273d;
-		}
-
-		.card-grid {
-			display: grid;
-			grid-template-columns: repeat(2, 1fr);
-			gap: 1.5rem;
-			margin-bottom: 1.5rem;
-		}
-
-		.card-field {
-			display: flex;
-			flex-direction: column;
-			gap: 0.5rem;
-		}
-
-		.field-label {
-			color: #a9b4ca;
-			font-size: 0.875rem;
-			font-weight: 500;
-		}
-
-		.field-value {
-			font-size: 1.125rem;
-			font-weight: 500;
-		}
-
-		/* Modal styles */
-		.modal {
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			background: rgba(0, 0, 0, 0.5);
-			display: none;
-			place-items: center;
-			padding: 1rem;
-		}
-
-		.modal-content {
-			background: white;
-			padding: 2rem;
-			border-radius: 0.5rem;
-			width: 100%;
-			max-width: 36rem;
-			position: relative;
-		}
-
-		.modal-close {
-			position: absolute;
-			top: 1rem;
-			right: 1rem;
-			background: none;
-			border: none;
-			font-size: 1.5rem;
-			cursor: pointer;
-			color: #6b7280;
-		}
-
-		/* Modal toggle functionality */
-		#modal-toggle {
-			display: none;
-		}
-
-		#modal-toggle:checked + .modal {
-			display: grid;
-		}
-
-		/* Responsive adjustments */
-		@media (max-width: 640px) {
-			.card-grid {
-				grid-template-columns: 1fr;
-			}
-
-			.card-title {
-				font-size: 2.5rem;
-			}
-		}
-	</style>
-	<div style="display: flex; place-content: space-between; margin-inline: 1rem;">
-		@components.BackButton()
-		@components.EditButton(event.ID)
-	</div>
-	<!-- Card -->
-	<label
-		class="card"
-		data-signals={ fmt.Sprintf("{title: '%s', game_master: '%s', system: '%s', short_description: '%s'}", event.Title, event.GameMaster, event.System, event.ShortDescription) }
-	>
-		<div class="card-header">
-			<img
-				src="/static/images/events/dice-small.webp"
-				alt="Colorful dice collection"
-				class="card-image"
-			/>
-			if (mvc.IsEditing) {
-				<input
-					data-bind-title
-					type="text"
-					class="card-title"
-					placeholder="Enter a title"
-					value={ event.Title }
-				/>
-			} else {
-				<h1 class="card-title">{ event.Title }</h1>
-			}
-		</div>
-		<div class="card-content">
-			<div class="card-grid">
-				<div class="card-field">
-					<span class="field-label">Game Master</span>
-					if (mvc.IsEditing) {
-						<input
-							data-bind="game_master"
-							type="text"
-							class="field-value"
-							placeholder="Enter a game master"
-							value={ event.GameMaster }
-						/>
-					} else {
-						<p class="field-value">{ event.GameMaster }</p>
-					}
-				</div>
-				<div class="card-field">
-					<span class="field-label">System</span>
-					if (mvc.IsEditing) {
-						<input
-							data-bind-system
-							type="text"
-							class="field-value"
-							placeholder="Enter a system"
-							value={ event.System }
-						/>
-					} else {
-						<p class="field-value">{ event.System }</p>
-					}
-				</div>
-			</div>
-			<div class="card-field">
-				<span class="field-label">Description</span>
-				if (mvc.IsEditing) {
-					<textarea
-						data-bind="short_description"
-						class="field-value"
-						rows="4"
-						cols="50"
-						placeholder="Enter a description"
-					>{ event.ShortDescription }</textarea>
-				} else {
-					<p class="field-value">{ event.ShortDescription }</p>
-				}
-			</div>
-		</div>
-	</label>
-	if (mvc.IsEditing) {
-		@components.EditEvent(event)
+templ ShowEvents(state *EventState, events []models.Event, db *sql.DB, logger *slog.Logger) {
+	{{ fmt.Println("Id: ", state.Idx, state.Idx == -1) }}
+	for _, event := range events {
+		@root.EventCard(event, state.Idx)
 	}
 }

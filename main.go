@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
 	"log/slog"
 	"net/http"
 	"os"
@@ -11,10 +12,10 @@ import (
 
 	"database/sql"
 
-	"github.com/Regncon/conorganizer/service"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"golang.org/x/sync/errgroup"
+	_ "modernc.org/sqlite"
 )
 
 func main() {
@@ -22,7 +23,7 @@ func main() {
 	// logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{AddSource: true}))
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
-	db, err := service.InitDB("events.db")
+	db, err := initDB("events.db", "initialize.sql")
 	if err != nil {
 		logger.Error("Could not initialize DB", "err", err)
 	}
@@ -93,7 +94,7 @@ func startServer(ctx context.Context, logger *slog.Logger, port string, db *sql.
 
 func initDB(dbPath string, sqlFile string) (*sql.DB, error) {
 	if _, err := os.Stat(dbPath); os.IsNotExist(err) {
-		db, err := sql.Open("sqlite3", dbPath)
+		db, err := sql.Open("sqlite", dbPath)
 		if err != nil {
 			return nil, fmt.Errorf("failed to open DB: %w", err)
 		}
@@ -105,7 +106,7 @@ func initDB(dbPath string, sqlFile string) (*sql.DB, error) {
 		return db, nil
 	}
 
-	db, err := sql.Open("sqlite3", dbPath)
+	db, err := sql.Open("sqlite", dbPath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open DB: %w", err)
 	}
@@ -132,7 +133,7 @@ func initializeDatabase(db *sql.DB, filename string) error {
 }
 
 func loadSQLFile(filename string) (string, error) {
-	data, err := os.ReadFile(filename)
+	data, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return "", fmt.Errorf("failed to read file %s: %w", filename, err)
 	}

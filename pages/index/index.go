@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Regncon/conorganizer/models"
 	"github.com/Regncon/conorganizer/pages/root"
 	"github.com/delaneyj/toolbelt"
 	"github.com/delaneyj/toolbelt/embeddednats"
@@ -44,7 +43,7 @@ func SetupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 	}
 	logger.Info("Key value store created successfully")
 
-	saveMVC := func(ctx context.Context, sessionID string, mvc *EventMVC) error {
+	saveMVC := func(ctx context.Context, sessionID string, mvc *EventState) error {
 		b, err := json.Marshal(mvc)
 		if err != nil {
 			return fmt.Errorf("failed to marshal mvc: %w", err)
@@ -55,7 +54,7 @@ func SetupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 		return nil
 	}
 
-	resetMVC := func(mvc *EventMVC) {
+	resetMVC := func(mvc *EventState) {
 		events, err := root.GetEvents(db, logger)
 		if err != nil {
 			logger.Error("Could not get events", "err", err)
@@ -66,14 +65,14 @@ func SetupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 		mvc.Idx = -1
 	}
 
-	mvcSession := func(w http.ResponseWriter, r *http.Request) (string, *EventMVC, error) {
+	mvcSession := func(w http.ResponseWriter, r *http.Request) (string, *EventState, error) {
 		ctx := r.Context()
 		sessionID, err := upsertSessionID(store, r, w)
 		if err != nil {
 			return "", nil, fmt.Errorf("failed to get session id: %w", err)
 		}
 
-		mvc := &EventMVC{}
+		mvc := &EventState{}
 		if entry, err := kv.Get(ctx, sessionID); err != nil {
 			if err != jetstream.ErrKeyNotFound {
 				return "", nil, fmt.Errorf("failed to get key value: %w", err)
@@ -92,10 +91,10 @@ func SetupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 	}
 
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		Index("Regncon program 2025", "/events").Render(r.Context(), w)
+		Index("Regncon program 2025", "/events/stream").Render(r.Context(), w)
 	})
 
-	router.Route("/events", func(eventsRouter chi.Router) {
+	router.Route("/events/stream", func(eventsRouter chi.Router) {
 		eventsRouter.Get("/", func(w http.ResponseWriter, r *http.Request) {
 			sessionID, mvc, err := mvcSession(w, r)
 			if err != nil {
@@ -132,7 +131,7 @@ func SetupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 						http.Error(w, err.Error(), http.StatusInternalServerError)
 						return
 					}
-					c := AllEventMVCView(mvc, db, logger)
+					c := EventsView(mvc, db, logger)
 					if err := sse.MergeFragmentTempl(c); err != nil {
 						logger.Error("Error merging fragment template", "err", err)
 						sse.ConsoleError(err)
@@ -162,29 +161,4 @@ func upsertSessionID(store sessions.Store, r *http.Request, w http.ResponseWrite
 		}
 	}
 	return id, nil
-}
-
-func updateDb(db *sql.DB, logger *slog.Logger, updatedEvent models.Event, w http.ResponseWriter, r *http.Request) error {
-	query := "UPDATE events SET title = ?, short_description = ?, game_master = ?, system = ? WHERE id = ?"
-	res, err := db.Exec(query, updatedEvent.Title, updatedEvent.ShortDescription, updatedEvent.GameMaster, updatedEvent.System, updatedEvent.ID)
-	if err != nil {
-		logger.Error("Error updating event", "err", err)
-		http.Error(w, fmt.Sprintf("Error updating event: %v", err), http.StatusBadRequest)
-		return err
-	}
-
-	rowsAffected, err := res.RowsAffected()
-	if err != nil {
-		logger.Error("Error getting rows affected", "err", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return err
-	}
-
-	if rowsAffected == 0 {
-		logger.Error("Event not found or no changes made")
-		http.Error(w, "Event not found or no changes made", http.StatusNotFound)
-		return err
-	}
-	fmt.Printf("Event updated successfully: %v\n", updatedEvent)
-	return nil
 }

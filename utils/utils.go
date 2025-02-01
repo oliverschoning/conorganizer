@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func NumberToString(number int64) string {
+func NumberToString(number int) string {
 	return fmt.Sprintf("%d", number)
 
 }

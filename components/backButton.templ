@@ -172,7 +172,7 @@ templ BackButton() {
 	}
 
 	</style>
-	<button class="back-btn back-btn-item" data-on-click={ "@put('/event/back')" }>
+	<button class="back-btn back-btn-item" onClick="history.back()">
 		<span class="back-btn-bg">
 			<span class="back-btn-bg-layers">
 				<span class="back-btn-bg-layer back-btn-bg-layer-1 -purple"></span>

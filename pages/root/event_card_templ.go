@@ -75,9 +75,9 @@ func EventCard(event models.Event, editIdx int) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
-		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(event.GameMaster)
+		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(event.HostName)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/event_card.templ`, Line: 49, Col: 79}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/event_card.templ`, Line: 49, Col: 77}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -101,9 +101,9 @@ func EventCard(event models.Event, editIdx int) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var7 string
-		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(event.ShortDescription)
+		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(event.Description)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/event_card.templ`, Line: 51, Col: 73}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/event_card.templ`, Line: 51, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {

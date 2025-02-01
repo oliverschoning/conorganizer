@@ -2,7 +2,14 @@ package components
 
 import "fmt"
 
-templ EditButton(id int64) {
+func Ternary(condition bool) string {
+	if condition {
+		return "true"
+	}
+	return "false"
+}
+
+templ EditButton(id int, isEditing bool) {
 	<style>
 
 		.button2 {
@@ -49,8 +56,17 @@ templ EditButton(id int64) {
 			transition-duration: .3s;
 			box-shadow: 2px 2px 0px rgb(140, 32, 212);
 		}
+		.button2:disabled {
+			cursor: not-allowed;
+		}
 	</style>
-	<button data-on-click={ fmt.Sprintf("@put('/event/%d/edit')", id) } class="button2">
+	<button
+		data-on-click={ fmt.Sprintf("@put('/event/%d/edit')", id) }
+		class="button2"
+		if isEditing {
+			disabled
+		}
+	>
 		edit
 		<svg class="svg" viewBox="0 0 24 24">
 			<g fill="currentColor" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">

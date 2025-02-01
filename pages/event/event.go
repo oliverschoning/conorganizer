@@ -63,7 +63,7 @@ func SetupEventRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 		}
 
 		state.Event = event
-		state.Idx = id
+		state.IsEditing = false
 	}
 
 	stateSessionWithId := func(w http.ResponseWriter, r *http.Request, id int) (string, *EventState, error) {
@@ -184,7 +184,6 @@ func SetupEventRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 				return
 			}
 
-			state.Idx = id
 			state.IsEditing = true
 			if err := saveState(r.Context(), sessionID, state); err != nil {
 				sse.ConsoleError(err)
@@ -202,7 +201,7 @@ func SetupEventRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 			}
 
 			var updatedEvent models.Event
-			updatedEvent.ID = int64(id)
+			updatedEvent.ID = id
 			err = datastar.ReadSignals(r, &updatedEvent)
 			if err != nil {
 				logger.Error("Error reading signals", "err", err)
@@ -247,23 +246,6 @@ func SetupEventRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 			}
 
 		})
-		eventRouter.Put("/back", func(w http.ResponseWriter, r *http.Request) {
-
-			sessionID, state, err := stateSessionWithId(w, r, -1)
-			sse := datastar.NewSSE(w, r)
-			if err != nil {
-				sse.ConsoleError(err)
-				return
-			}
-
-			state.Idx = -1
-			state.IsEditing = false
-			if err := saveState(r.Context(), sessionID, state); err != nil {
-				sse.ConsoleError(err)
-				return
-			}
-
-		})
 	})
 
 	return nil
@@ -283,12 +265,52 @@ func upsertSessionID(store sessions.Store, r *http.Request, w http.ResponseWrite
 			return "", fmt.Errorf("failed to save session: %w", err)
 		}
 	}
-	return "eventState_"+id, nil
+	return "eventState_" + id, nil
 }
 
 func updateDb(db *sql.DB, logger *slog.Logger, updatedEvent models.Event, w http.ResponseWriter, r *http.Request) error {
-	query := "UPDATE events SET title = ?, short_description = ?, game_master = ?, system = ? WHERE id = ?"
-	res, err := db.Exec(query, updatedEvent.Title, updatedEvent.ShortDescription, updatedEvent.GameMaster, updatedEvent.System, updatedEvent.ID)
+	query := `
+			UPDATE events
+			SET
+				title = ?,
+				description = ?,
+				image_url = ?,
+				system = ?,
+				host_name = ?,
+				host = ?,
+				room_name = ?,
+				pulje_name = ?,
+				max_players = ?,
+				child_friendly = ?,
+				adults_only = ?,
+				beginner_friendly = ?,
+				experienced_only = ?,
+				can_be_run_in_english = ?,
+				long_running = ?,
+				short_running = ?
+			WHERE id = ?
+			`
+	res, err := db.Exec(
+		query,
+		updatedEvent.Title,
+		updatedEvent.Description,
+		updatedEvent.ImageURL,
+		updatedEvent.System,
+		updatedEvent.HostName,
+		updatedEvent.Host,
+		updatedEvent.RoomName,
+		updatedEvent.PuljeName,
+		updatedEvent.MaxPlayers,
+		updatedEvent.ChildFriendly,
+		updatedEvent.AdultsOnly,
+		updatedEvent.BeginnerFriendly,
+		updatedEvent.ExperiencedOnly,
+		updatedEvent.CanBeRunInEnglish,
+		updatedEvent.LongRunning,
+		updatedEvent.ShortRunning,
+		updatedEvent.ID,
+	)
+
 	if err != nil {
 		logger.Error("Error updating event", "err", err)
 		http.Error(w, fmt.Sprintf("Error updating event: %v", err), http.StatusBadRequest)
