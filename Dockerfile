@@ -41,4 +41,4 @@ RUN go install github.com/a-h/templ/cmd/templ@v0.3.819 && \
 # Expose ports used by the application
 EXPOSE 8080 7331
 
-CMD ["task", "live"]
+# CMD ["task", "live"]

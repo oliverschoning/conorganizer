@@ -6,8 +6,7 @@ $containerName = "dev-container"
 $containerWorkDir = "/home/devuser/app"
 
 # Check if the Docker image exists
-$imageExists = docker images --format "{{.Repository}}:{{.Tag}}" | "{0}:latest" -f $imageName
-
+$imageExists = docker images --format "{{.Repository}}:{{.Tag}}" | findstr $imageName
 if (-not $imageExists) {
     Write-Host "Docker image '$imageName' does not exist. Building the image using $dockerFilePath..."
     docker build -t $imageName -f $dockerFilePath $workDir
@@ -16,8 +15,11 @@ if (-not $imageExists) {
         exit 1
     }
     Write-Host "Docker image '$imageName' built successfully."
+    Write-Host "Running 'task live' please wait..."
 }
-
+if ($imageExists) {
+    Write-Host "Docker image '$imageName' already exists. Opening the container..."
+}
 # Run the Docker container
 docker run -it --rm `
     --name $containerName `
