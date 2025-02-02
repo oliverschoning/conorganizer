@@ -18,7 +18,7 @@ if (-not $imageExists) {
     Write-Host "Running 'task live' please wait..."
 }
 if ($imageExists) {
-    Write-Host "Docker image '$imageName' already exists. Opening the container..."
+    Write-Host "Found docker image '$imageName'. Opening the container..."
 }
 # Run the Docker container
 docker run -it --rm `
