@@ -33,7 +33,7 @@ func main() {
 		if p, ok := os.LookupEnv("PORT"); ok {
 			return p
 		}
-		return "3000"
+		return "8080"
 	}
 
 	logger.Info(fmt.Sprintf("Starting Server 0.0.0.0:%s", getPort()))
