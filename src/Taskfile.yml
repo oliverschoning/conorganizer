@@ -5,16 +5,30 @@ env:
 
 tasks:
   # The `build:` tasks below are used together for "production" builds of your project
-  build:templ:
-    cmds:
-      - go run github.com/a-h/templ/cmd/templ@v0.3.819 generate -v
-
   build:
     cmds:
       - go build -o bin/main .
     deps:
       - build:templ
     parallel: true
+
+  build:templ:
+    cmds:
+      - go run github.com/a-h/templ/cmd/templ@v0.3.819 generate -v
+
+  # The `live:` tasks below are used together for "dev" builds, and will hot-reload your entire project when there are code changes
+  dev/templ:
+    cmds:
+      - templ generate --watch --proxybind="0.0.0.0" --proxy="http://localhost:8080" --open-browser=false -v
+
+  dev/air:
+    cmds:
+      - air -c ".air.toml"
+
+  dev:
+    deps:
+      - dev/templ
+      - dev/air
 
   # Use this task to debug your project with the delve debugger
   debug:
@@ -23,39 +37,7 @@ tasks:
     deps:
       - build
 
-  # The `live:` tasks below are used together for "dev" builds, and will hot-reload your entire project when there are code changes
-  live:templ:
-    cmds:
-      - go run github.com/a-h/templ/cmd/templ@v0.3.819 generate --watch --proxybind="0.0.0.0" --proxy="http://localhost:8080" --open-browser=false -v
-      
-  live:server:
-    cmds:
-      - |
-        go run github.com/air-verse/air@v1.52.3 \
-        --build.cmd "go build -tags dev -o tmp/bin/main" \
-        --build.bin "tmp/bin/main" \
-        --build.delay "20" \
-        --build.include_ext "go" \
-        --build.stop_on_error "false" \
-        --misc.clean_on_exit true
-
-  live:reload:
-    cmds:
-      - |
-        go run github.com/air-verse/air@v1.52.3 \
-        --build.cmd "go run github.com/a-h/templ/cmd/templ@v0.3.819 generate --notify-proxy" \
-        --build.bin "true" \
-        --build.delay "100" \
-        --build.exclude_dir "" \
-        --build.include_dir "$STATIC_DIR" \
-        --build.include_ext "js,css"
-
-  live:
-    deps:
-      - live:templ
-      - live:reload
-      - live:server
-
+  # What does this do?
   run:
     cmds:
       - ./bin/main
