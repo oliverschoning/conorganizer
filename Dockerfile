@@ -1,27 +1,17 @@
 # Use a base image with Go pre-installed
-FROM docker.io/golang:1.23.5 as my-dev-environment
-
-# Set working directory
-# WORKDIR /app
+FROM golang:1.24 AS dev-environment
 
 # Install system dependencies and task runner
-RUN apt-get update && apt-get install -y \
-    curl \
-    sudo \
-    git \
-    sqlite3 \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Install task runner
-# RUN sh -c "$(curl --silent --location https://taskfile.dev/install.sh)" -- -d
+RUN apt-get update && apt-get install -y curl sudo git sqlite3
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Create a user and group named devuser
-RUN groupadd -g 1000 devuser && \
-    useradd -m -u 1000 -g devuser -s /bin/bash devuser
+RUN groupadd -g 1000 devuser
+RUN useradd -m -u 1000 -g devuser -s /bin/bash devuser
 
 # Configure passwordless sudo for the devuser user
-RUN echo "devuser ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/devuser && \
-    chmod 0440 /etc/sudoers.d/devuser
+RUN echo "devuser ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/devuser
+RUN chmod 0440 /etc/sudoers.d/devuser
 
 # Switch to the 'devuser' user
 USER devuser
@@ -29,15 +19,14 @@ USER devuser
 # Set up the working directory for the user
 WORKDIR /home/devuser/app
 
-# Copy go.mod and go.sum and download dependencies
-# COPY go.mod go.sum ./
-# RUN go mod download
+# Copy over and download dependencies
+COPY src/go.mod src/go.sum ./
+RUN go mod download
 
-# Install templ and air globally
-RUN go install github.com/a-h/templ/cmd/templ@latest && \
-    go install github.com/go-task/task/v3/cmd/task@latest && \
-    go install github.com/air-verse/air@latest
+# Install project deeps
+RUN go install github.com/a-h/templ/cmd/templ@latest
+RUN go install github.com/air-verse/air@latest
+RUN go install github.com/go-task/task/v3/cmd/task@latest
 
 # Expose ports used by the application
-EXPOSE 8080 7331
-
+# EXPOSE 8080 7331
