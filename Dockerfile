@@ -29,4 +29,4 @@ RUN go install github.com/air-verse/air@latest
 RUN go install github.com/go-task/task/v3/cmd/task@latest
 
 # Expose ports used by the application
-# EXPOSE 8080 7331
+EXPOSE 8080 7331

@@ -14,3 +14,4 @@ services:
         source: ./src/
         target: /home/devuser/app
         read_only: false
+    command: task dev
