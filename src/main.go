@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"log/slog"
 	"net/http"
@@ -10,18 +11,18 @@ import (
 	"syscall"
 
 
-	"database/sql"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"golang.org/x/sync/errgroup"
 	"io/ioutil"
 	_ "modernc.org/sqlite"
+	_ "github.com/tursodatabase/go-libsql"
 )
 
 func main() {
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
-	db, err := initDB("events.db", "initialize.sql")
+	db, err := initDB("file:events.db", "initialize.sql")
 	if err != nil {
 		logger.Error("Could not initialize DB: %v", err)
 	}
@@ -91,7 +92,7 @@ func startServer(ctx context.Context, logger *slog.Logger, port string, db *sql.
 
 func initDB(dbPath string, sqlFile string) (*sql.DB, error) {
 	if _, err := os.Stat(dbPath); os.IsNotExist(err) {
-		db, err := sql.Open("sqlite", dbPath)
+		db, err := sql.Open("libsql", dbPath)
 		if err != nil {
 			return nil, fmt.Errorf("failed to open DB: %w", err)
 		}
@@ -103,7 +104,7 @@ func initDB(dbPath string, sqlFile string) (*sql.DB, error) {
 		return db, nil
 	}
 
-	db, err := sql.Open("sqlite", dbPath)
+	db, err := sql.Open("libsql", dbPath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open DB: %w", err)
 	}
