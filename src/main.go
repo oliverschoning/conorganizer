@@ -66,7 +66,7 @@ func startServer(ctx context.Context, logger *slog.Logger, port string, db *sql.
 			middleware.Recoverer,
 		)
 
-		router.Handle("/static/*", http.StripPrefix("/static/", static(logger)))
+		router.Handle("/public/*", http.StripPrefix("/public/", static(logger)))
 
 		cleanup, err := setupRoutes(ctx, logger, router, db)
 		defer cleanup()
