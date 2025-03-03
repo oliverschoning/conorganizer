@@ -1,7 +1,7 @@
 version: "3"
 
 env:
-  STATIC_DIR: "web/static"
+  STATIC_DIR: "public"
 
 tasks:
   # The `build:` tasks below are used together for "production" builds of your project
@@ -14,21 +14,20 @@ tasks:
 
   build:templ:
     cmds:
-      - go run github.com/a-h/templ/cmd/templ@v0.3.819 generate -v
+      - go run templ generate -v
 
-  # The `live:` tasks below are used together for "dev" builds, and will hot-reload your entire project when there are code changes
-  dev/templ:
-    cmds:
-      - templ generate --watch --proxybind="0.0.0.0" --proxy="http://localhost:8080" --open-browser=false -v
+  # The `dev:` tasks below are used together for "dev" builds, and will hot-reload your entire project when there are code changes
+  dev:
+    deps:
+      - dev/air
 
   dev/air:
     cmds:
-      - air -c ".air.toml"
+      - air
 
-  dev:
-    deps:
-      - dev/templ
-      - dev/air
+  dev/templ:
+    cmds:
+      - templ generate --watch --proxybind="0.0.0.0" --proxy="http://localhost:8080" --open-browser=false -v
 
   # Use this task to debug your project with the delve debugger
   debug:
