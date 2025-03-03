@@ -1,5 +1,6 @@
 # Use a base image with Go pre-installed
 FROM golang:1.24 AS dev-environment
+ENV CGO_ENABLED=1
 
 # Install system dependencies and task runner
 RUN apt-get update && apt-get install -y curl sudo git sqlite3

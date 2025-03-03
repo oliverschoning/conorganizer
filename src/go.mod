@@ -16,12 +16,14 @@ require (
 	github.com/nats-io/nats.go v1.38.0
 	github.com/samber/lo v1.47.0
 	github.com/starfederation/datastar v1.0.0-beta.1
+	github.com/tursodatabase/go-libsql v0.0.0-20241221181756-6121e81fbf92
 	modernc.org/sqlite v1.34.4
 )
 
 require (
 	github.com/CAFxX/httpcompression v0.0.9 // indirect
 	github.com/andybalholm/brotli v1.1.1 // indirect
+	github.com/antlr4-go/antlr/v4 v4.13.0 // indirect
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
 	github.com/chewxy/math32 v1.11.1 // indirect
 	github.com/delaneyj/gostar v0.8.0 // indirect
@@ -36,6 +38,7 @@ require (
 	github.com/igrmk/treemap/v2 v2.0.1 // indirect
 	github.com/klauspost/compress v1.17.11 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.9 // indirect
+	github.com/libsql/sqlite-antlr4-parser v0.0.0-20240327125255-dbf53b6cbf06 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/minio/highwayhash v1.0.3 // indirect
 	github.com/nats-io/jwt/v2 v2.7.3 // indirect
