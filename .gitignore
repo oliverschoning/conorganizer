@@ -188,7 +188,5 @@ dist
 # ------------------------------------------------------------------
 
 # Limiting .go files produced by templ
-src/pages/*.go
-src/layout/*.go
 src/pages/**/*.go
-src/layout/**/*.go
+src/layouts/**/*.go
