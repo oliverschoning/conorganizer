@@ -14,7 +14,7 @@ import (
 
 //go:embed public/*
 var staticFS embed.FS
-var staticRootFS, _ = fs.Sub(staticFS, "/public")
+var staticRootFS, _ = fs.Sub(staticFS, "public")
 
 func static(logger *slog.Logger) http.Handler {
 	logger.Debug("Static assets are embedded")

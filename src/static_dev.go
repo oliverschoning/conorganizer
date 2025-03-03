@@ -10,7 +10,7 @@ import (
 )
 
 func static(logger *slog.Logger) http.Handler {
-	logger.Info("Static assets are being served from public folder")
+	logger.Info("Static assets are being served from public/")
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "no-store")
 		http.FileServerFS(os.DirFS("public")).ServeHTTP(w, r)
