@@ -190,3 +190,4 @@ dist
 # Limiting .go files produced by templ
 src/pages/**/*_templ.go
 src/layouts/**/*_templ.go
+src/components/**/*_templ.go
