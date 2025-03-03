@@ -8,3 +8,17 @@ body {
 	background: #21243d;
 	margin: 0;
 }
+
+.spin-to-win {
+  -webkit-animation: spin 240s linear infinite;
+	animation: spin 240s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
