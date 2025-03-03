@@ -79,7 +79,7 @@ func todosMVCView(mvc *TodoMVC, db *sql.DB) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("{input:'%s'}", input))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 51, Col: 52}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 51, Col: 52}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -113,7 +113,7 @@ func todosMVCView(mvc *TodoMVC, db *sql.DB) templ.Component {
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(datastar.PostSSE("/api/todos/-1/toggle"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 85, Col: 65}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 85, Col: 65}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -164,7 +164,7 @@ func todosMVCView(mvc *TodoMVC, db *sql.DB) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(left))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 110, Col: 26}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 110, Col: 26}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -198,7 +198,7 @@ func todosMVCView(mvc *TodoMVC, db *sql.DB) templ.Component {
 					var templ_7745c5c3_Var5 string
 					templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(TodoViewModeStrings[i])
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 121, Col: 79}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 121, Col: 79}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 					if templ_7745c5c3_Err != nil {
@@ -216,7 +216,7 @@ func todosMVCView(mvc *TodoMVC, db *sql.DB) templ.Component {
 					var templ_7745c5c3_Var6 string
 					templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(datastar.PutSSE("/api/todos/mode/%d", i))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 125, Col: 66}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 125, Col: 66}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 					if templ_7745c5c3_Err != nil {
@@ -229,7 +229,7 @@ func todosMVCView(mvc *TodoMVC, db *sql.DB) templ.Component {
 					var templ_7745c5c3_Var7 string
 					templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(TodoViewModeStrings[i])
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 127, Col: 34}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 127, Col: 34}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 					if templ_7745c5c3_Err != nil {
@@ -253,7 +253,7 @@ func todosMVCView(mvc *TodoMVC, db *sql.DB) templ.Component {
 				var templ_7745c5c3_Var8 string
 				templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("clear %d completed todos", completed))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 134, Col: 90}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 134, Col: 90}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 				if templ_7745c5c3_Err != nil {
@@ -266,7 +266,7 @@ func todosMVCView(mvc *TodoMVC, db *sql.DB) templ.Component {
 				var templ_7745c5c3_Var9 string
 				templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(datastar.DeleteSSE("/api/todos/-1"))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 137, Col: 61}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 137, Col: 61}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 				if templ_7745c5c3_Err != nil {
@@ -292,7 +292,7 @@ func todosMVCView(mvc *TodoMVC, db *sql.DB) templ.Component {
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(datastar.PutSSE("/api/todos/reset"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 146, Col: 60}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 146, Col: 60}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -351,7 +351,7 @@ func TodoInput(i int) templ.Component {
 			$input = '';
 		`, datastar.PutSSE("/api/todos/%d/edit", i)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 173, Col: 46}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 173, Col: 46}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
@@ -369,7 +369,7 @@ func TodoInput(i int) templ.Component {
 			var templ_7745c5c3_Var13 string
 			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(datastar.PutSSE("/api/todos/cancel"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 175, Col: 64}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 175, Col: 64}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {
@@ -427,7 +427,7 @@ func TodoRow(mode TodoViewMode, todo *Todo, i int, isEditing bool) templ.Compone
 			var templ_7745c5c3_Var15 string
 			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("todo%d", i))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 191, Col: 77}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 191, Col: 77}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 			if templ_7745c5c3_Err != nil {
@@ -440,7 +440,7 @@ func TodoRow(mode TodoViewMode, todo *Todo, i int, isEditing bool) templ.Compone
 			var templ_7745c5c3_Var16 string
 			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("toggle%d", i))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 193, Col: 35}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 193, Col: 35}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 			if templ_7745c5c3_Err != nil {
@@ -453,7 +453,7 @@ func TodoRow(mode TodoViewMode, todo *Todo, i int, isEditing bool) templ.Compone
 			var templ_7745c5c3_Var17 string
 			templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(datastar.PostSSE("/api/todos/%d/toggle", i))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 195, Col: 63}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 195, Col: 63}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 			if templ_7745c5c3_Err != nil {
@@ -466,7 +466,7 @@ func TodoRow(mode TodoViewMode, todo *Todo, i int, isEditing bool) templ.Compone
 			var templ_7745c5c3_Var18 string
 			templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(fetchingSignalName)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 196, Col: 39}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 196, Col: 39}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 			if templ_7745c5c3_Err != nil {
@@ -494,7 +494,7 @@ func TodoRow(mode TodoViewMode, todo *Todo, i int, isEditing bool) templ.Compone
 			var templ_7745c5c3_Var19 string
 			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(indicatorID)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 205, Col: 20}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 205, Col: 20}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 			if templ_7745c5c3_Err != nil {
@@ -507,7 +507,7 @@ func TodoRow(mode TodoViewMode, todo *Todo, i int, isEditing bool) templ.Compone
 			var templ_7745c5c3_Var20 string
 			templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(datastar.GetSSE("/api/todos/%d/edit", i))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 207, Col: 60}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 207, Col: 60}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 			if templ_7745c5c3_Err != nil {
@@ -520,7 +520,7 @@ func TodoRow(mode TodoViewMode, todo *Todo, i int, isEditing bool) templ.Compone
 			var templ_7745c5c3_Var21 string
 			templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(fetchingSignalName)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 208, Col: 39}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 208, Col: 39}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 			if templ_7745c5c3_Err != nil {
@@ -533,7 +533,7 @@ func TodoRow(mode TodoViewMode, todo *Todo, i int, isEditing bool) templ.Compone
 			var templ_7745c5c3_Var22 string
 			templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(todo.Text)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 210, Col: 15}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 210, Col: 15}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 			if templ_7745c5c3_Err != nil {
@@ -554,7 +554,7 @@ func TodoRow(mode TodoViewMode, todo *Todo, i int, isEditing bool) templ.Compone
 			var templ_7745c5c3_Var23 string
 			templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("delete%d", i))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 214, Col: 35}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 214, Col: 35}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
 			if templ_7745c5c3_Err != nil {
@@ -567,7 +567,7 @@ func TodoRow(mode TodoViewMode, todo *Todo, i int, isEditing bool) templ.Compone
 			var templ_7745c5c3_Var24 string
 			templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(datastar.DeleteSSE("/api/todos/%d", i))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 216, Col: 58}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 216, Col: 58}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
 			if templ_7745c5c3_Err != nil {
@@ -580,7 +580,7 @@ func TodoRow(mode TodoViewMode, todo *Todo, i int, isEditing bool) templ.Compone
 			var templ_7745c5c3_Var25 string
 			templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("delete_todo%d", i))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 217, Col: 49}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 217, Col: 49}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
 			if templ_7745c5c3_Err != nil {
@@ -593,7 +593,7 @@ func TodoRow(mode TodoViewMode, todo *Todo, i int, isEditing bool) templ.Compone
 			var templ_7745c5c3_Var26 string
 			templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(fetchingSignalName)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 218, Col: 39}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 218, Col: 39}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
 			if templ_7745c5c3_Err != nil {
@@ -606,7 +606,7 @@ func TodoRow(mode TodoViewMode, todo *Todo, i int, isEditing bool) templ.Compone
 			var templ_7745c5c3_Var27 string
 			templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(fetchingSignalName + "")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/todo.templ`, Line: 219, Col: 49}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/todo.templ`, Line: 219, Col: 49}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
 			if templ_7745c5c3_Err != nil {

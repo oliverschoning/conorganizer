@@ -31,14 +31,14 @@ func event_mobile(event *models.Event) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><div style=\"\n\t    width: 350px;\n\t    border-radius: 15px;\n\t    overflow: hidden;\n\t    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);\n\t    background-color: #3b4252;\n\t    color: #eceff4;\"><div style=\"position: relative;\"><img src=\"/static/assets/images/events/dice-small.webp\" style=\"width: 100%; display: block;\"><div style=\"\n\t\t\t    position: absolute;\n\t\t\t    top: 0;\n\t\t\t    left: 0;\n\t\t\t    width: 100%;\n\t\t\t    height: 100%;\n\t\t\t    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8));\n\t\t\t    display: flex;\n\t\t\t    justify-content: center;\n\t\t\t    align-items: center;\n\t\t\t    color: #eceff4;\n\t\t\t    text-align: center;\n\t\t\t    padding: 10px;\n\t\t\t    box-sizing: border-box;\"><h1>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><div style=\"\r\n\t    width: 350px;\r\n\t    border-radius: 15px;\r\n\t    overflow: hidden;\r\n\t    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);\r\n\t    background-color: #3b4252;\r\n\t    color: #eceff4;\"><div style=\"position: relative;\"><img src=\"/static/assets/images/events/dice-small.webp\" style=\"width: 100%; display: block;\"><div style=\"\r\n\t\t\t    position: absolute;\r\n\t\t\t    top: 0;\r\n\t\t\t    left: 0;\r\n\t\t\t    width: 100%;\r\n\t\t\t    height: 100%;\r\n\t\t\t    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8));\r\n\t\t\t    display: flex;\r\n\t\t\t    justify-content: center;\r\n\t\t\t    align-items: center;\r\n\t\t\t    color: #eceff4;\r\n\t\t\t    text-align: center;\r\n\t\t\t    padding: 10px;\r\n\t\t\t    box-sizing: border-box;\"><h1>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(event.Title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/event/event_mobile.templ`, Line: 37, Col: 22}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/event/event_mobile.templ`, Line: 37, Col: 22}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -51,7 +51,7 @@ func event_mobile(event *models.Event) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs("Some one cool")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/event/event_mobile.templ`, Line: 41, Col: 77}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/event/event_mobile.templ`, Line: 41, Col: 77}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -64,7 +64,7 @@ func event_mobile(event *models.Event) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs("D&Cthulu")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/event/event_mobile.templ`, Line: 42, Col: 80}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/event/event_mobile.templ`, Line: 42, Col: 80}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -77,7 +77,7 @@ func event_mobile(event *models.Event) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(event.Description)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/event/event_mobile.templ`, Line: 43, Col: 67}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/event/event_mobile.templ`, Line: 43, Col: 67}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {

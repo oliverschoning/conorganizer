@@ -43,14 +43,14 @@ func eventCard(ID int64, title string, game_master string, system string, short_
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" style=\"text-decoration: none; color: #eceff4;\"><div style=\"\n\t    width: 350px;\n\t    border-radius: 15px;\n\t    overflow: hidden;\n\t    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);\n\t    background-color: #3b4252;\n\t    color: #eceff4;\"><div style=\"position: relative;\"><img src=\"/static/assets/images/events/dice-small.webp\" style=\"width: 100%; display: block;\"><div style=\"\n\t\t\t    position: absolute;\n\t\t\t    top: 0;\n\t\t\t    left: 0;\n\t\t\t    width: 100%;\n\t\t\t    height: 100%;\n\t\t\t    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8));\n\t\t\t    display: flex;\n\t\t\t    justify-content: center;\n\t\t\t    align-items: center;\n\t\t\t    color: #eceff4;\n\t\t\t    text-align: center;\n\t\t\t    padding: 10px;\n\t\t\t    box-sizing: border-box;\"><h1>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" style=\"text-decoration: none; color: #eceff4;\"><div style=\"\r\n\t    width: 350px;\r\n\t    border-radius: 15px;\r\n\t    overflow: hidden;\r\n\t    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);\r\n\t    background-color: #3b4252;\r\n\t    color: #eceff4;\"><div style=\"position: relative;\"><img src=\"/static/assets/images/events/dice-small.webp\" style=\"width: 100%; display: block;\"><div style=\"\r\n\t\t\t    position: absolute;\r\n\t\t\t    top: 0;\r\n\t\t\t    left: 0;\r\n\t\t\t    width: 100%;\r\n\t\t\t    height: 100%;\r\n\t\t\t    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8));\r\n\t\t\t    display: flex;\r\n\t\t\t    justify-content: center;\r\n\t\t\t    align-items: center;\r\n\t\t\t    color: #eceff4;\r\n\t\t\t    text-align: center;\r\n\t\t\t    padding: 10px;\r\n\t\t\t    box-sizing: border-box;\"><h1>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/event_card.templ`, Line: 43, Col: 16}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/event_card.templ`, Line: 43, Col: 16}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -63,7 +63,7 @@ func eventCard(ID int64, title string, game_master string, system string, short_
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(game_master)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/event_card.templ`, Line: 47, Col: 73}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/event_card.templ`, Line: 47, Col: 73}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -76,7 +76,7 @@ func eventCard(ID int64, title string, game_master string, system string, short_
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(system)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/event_card.templ`, Line: 48, Col: 76}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/event_card.templ`, Line: 48, Col: 76}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -89,7 +89,7 @@ func eventCard(ID int64, title string, game_master string, system string, short_
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(short_description)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/event_card.templ`, Line: 49, Col: 67}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/event_card.templ`, Line: 49, Col: 67}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {

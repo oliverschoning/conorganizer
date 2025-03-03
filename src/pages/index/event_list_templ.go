@@ -66,7 +66,7 @@ func eventList(db *sql.DB) templ.Component {
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(err.Error())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index/event_list.templ`, Line: 31, Col: 41}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/index/event_list.templ`, Line: 31, Col: 41}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
@@ -77,7 +77,7 @@ func eventList(db *sql.DB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div style=\" display: grid;\n\t\t\t\t\tgrid-template-columns: repeat(auto-fit,minmax(350px, 350px));\n\t\t\t\t\tgap: 1rem;\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div style=\" display: grid;\r\n\t\t\t\t\tgrid-template-columns: repeat(auto-fit,minmax(350px, 350px));\r\n\t\t\t\t\tgap: 1rem;\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
