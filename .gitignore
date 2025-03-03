@@ -186,3 +186,9 @@ dist
 .yarn/install-state.gz
 .pnp.*
 # ------------------------------------------------------------------
+
+# Limiting .go files produced by templ
+src/pages/*.go
+src/layout/*.go
+src/pages/**/*.go
+src/layout/**/*.go
