@@ -12,7 +12,7 @@ import (
 	"database/sql"
 	"net/http"
 
-	"github.com/Regncon/conorganizer/web/layouts"
+	"github.com/Regncon/conorganizer/layouts"
 	"github.com/go-chi/chi/v5"
 	datastar "github.com/starfederation/datastar/sdk/go"
 )

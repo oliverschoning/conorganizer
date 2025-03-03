@@ -11,7 +11,7 @@ import templruntime "github.com/a-h/templ/runtime"
 import (
 	"database/sql"
 	"fmt"
-	"github.com/Regncon/conorganizer/web/components"
+	"github.com/Regncon/conorganizer/components"
 	datastar "github.com/starfederation/datastar/sdk/go"
 )
 

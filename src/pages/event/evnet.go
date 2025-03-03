@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/Regncon/conorganizer/models"
-	"github.com/Regncon/conorganizer/web/pages/index"
+	"github.com/Regncon/conorganizer/pages/index"
 	"github.com/delaneyj/toolbelt"
 	"github.com/delaneyj/toolbelt/embeddednats"
 	"github.com/go-chi/chi/v5"

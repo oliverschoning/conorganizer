@@ -8,8 +8,9 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/Regncon/conorganizer/src/pages/event"
-	"github.com/Regncon/conorganizer/src/pages/index"
+
+	"github.com/Regncon/conorganizer/pages/event"
+	"github.com/Regncon/conorganizer/pages/index"
 	"github.com/delaneyj/toolbelt"
 	"github.com/delaneyj/toolbelt/embeddednats"
 	"github.com/go-chi/chi/v5"

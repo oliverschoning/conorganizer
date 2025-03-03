@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"database/sql"
-	"github.com/Regncon/conorganizer/web/layouts"
+	"github.com/Regncon/conorganizer/layouts"
 	datastar "github.com/starfederation/datastar/sdk/go"
 )
 
